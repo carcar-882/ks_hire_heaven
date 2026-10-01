@@ -1,6 +1,7 @@
 import { AboutSection } from './components/AboutSection';
 import { Navigate, Route, Routes } from 'react-router-dom';
 import About from './pages/About';
+import Careers from './pages/Careers';
 
 const platforms = [
   { id: 'azure', type: 'azure', title: 'Microsoft Azure', subtitle: 'Our flagship' },
@@ -54,6 +55,7 @@ export default function App() {
         element={<AboutSection platforms={platforms} benefits={benefits} journey={journey} />}
       />
       <Route path="/about" element={<About />} />
+      <Route path="/careers" element={<Careers />} />
       <Route path="/contact" element={<Navigate to="/about#contact" replace />} />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>

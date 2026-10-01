@@ -48,13 +48,15 @@ export const customerTypes = [
 
 export const cloudJourney = ['Adopt', 'Modernize', 'Secure', 'Optimize', 'Grow'];
 
+import teamMemberImg from '../../assets/team-member.png';
+
 export const teamMembers = [
   {
-    id: 'team-member-placeholder',
+    id: 'team-member-1',
     name: 'Name to be provided',
     role: 'Role to be provided',
     description: 'Profile details will be added when approved.',
-    image: '',
+    image: teamMemberImg,
     linkedin: '',
   },
 ];
