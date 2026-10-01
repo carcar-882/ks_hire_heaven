@@ -119,31 +119,7 @@
   object-fit: contain;
 }
 
-.site-footer-youtube-img {
-  margin-top: 16px;
-  display: inline-flex;
-  transition: transform 180ms ease;
-  width: 200px;
-}
 
-.site-footer-youtube-img img {
-  width: 100%;
-  height: auto;
-  object-fit: contain;
-}
-
-.site-footer-youtube-img:hover {
-  transform: translateY(-2px);
-}
-
-.site-footer-youtube-arrow {
-  color: #1682eb;
-  transition: transform 180ms ease;
-}
-
-.site-footer-youtube:hover .site-footer-youtube-arrow {
-  transform: translateX(3px);
-}
 
 .site-footer-tagline {
   max-width: 255px;

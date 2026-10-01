@@ -1,7 +1,6 @@
 import { useReducedMotion, motion } from 'framer-motion';
 import { ArrowRight, ArrowUpRight, AtSign, Linkedin, Mail, MessageCircle, Phone, Youtube } from 'lucide-react';
 import brandLogo from '../assets/logo.jpg';
-import youtubeBtnImg from '../assets/youtube-btn.png';
 import { contact, company } from './about/aboutData';
 import './Footer.css';
 
@@ -84,18 +83,6 @@ export default function Footer() {
             whileTap={reduceMotion ? undefined : { scale: 0.97 }}
           >
             <img src={brandLogo} alt="Hire Heaven Software India Private Limited Logo" />
-          </motion.a>
-          <motion.a
-            className="site-footer-youtube-img"
-            href="https://youtu.be/5tTtIX92ipY?si=5FNj79hWHgwWRPx3"
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="Watch the KS Hire Heaven YouTube channel in a new tab"
-            whileHover={reduceMotion ? undefined : { scale: 1.03, y: -2 }}
-            whileTap={reduceMotion ? undefined : { scale: 0.98 }}
-            transition={{ type: 'spring', stiffness: 450, damping: 20 }}
-          >
-            <img src={youtubeBtnImg} alt="Watch Our Channel" />
           </motion.a>
           <p className="site-footer-tagline">Cloud Solutions. Digital Innovation. Business Growth.</p>
           <p className="site-footer-description">Hire Heaven Software India Private Limited is an emerging technology company focused on cloud solutions, digital transformation, Azure infrastructure, data, DevOps, analytics, and business technology.</p>
