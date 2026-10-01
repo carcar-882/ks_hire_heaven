@@ -1,4 +1,4 @@
-export const careersEmail = "recruitment@hireheaven.com";
+export const careersEmail = "ks.hireheavensoftwareindia@gmail.com";
 
 export const jobs = [
   {

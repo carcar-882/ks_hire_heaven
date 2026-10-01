@@ -2,6 +2,7 @@ import { useEffect, useState, useMemo } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 import HeroNavbar from '../components/HeroNavbar';
 import Footer from '../components/Footer';
+import ApplicationModal from '../components/ApplicationModal';
 import { jobs, careersEmail } from '../data/jobs';
 import '../components/Hero.css';
 import '../styles/careers/careers.css';
@@ -42,6 +43,8 @@ export default function Careers() {
   const [searchQuery, setSearchQuery] = useState('');
   const [activeCategory, setActiveCategory] = useState('All Roles');
   const [activeExperience, setActiveExperience] = useState('All Experience');
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedRole, setSelectedRole] = useState('');
 
   useEffect(() => {
     const previousTitle = document.title;
@@ -93,9 +96,8 @@ export default function Careers() {
   }, [searchQuery, activeCategory, activeExperience, jobs]);
 
   const handleApply = (jobTitle) => {
-    const subject = encodeURIComponent(`Application for ${jobTitle}`);
-    const body = encodeURIComponent(`Dear Hiring Team,\n\nI am interested in applying for the ${jobTitle} position at KS Hire Heaven Software India Private Limited.\n\nPlease find my resume attached for your consideration.\n\nName:\nPhone:\nEmail:\nYears of Experience:\nCurrent Location:\nCurrent Role:\nCurrent CTC:\nExpected CTC:\nNotice Period:\n\nRegards,\n[YOUR NAME]`);
-    window.location.href = `mailto:${careersEmail}?subject=${subject}&body=${body}`;
+    setSelectedRole(jobTitle);
+    setIsModalOpen(true);
   };
 
   const handleGeneralApply = () => {
@@ -346,6 +348,11 @@ export default function Careers() {
       </main>
       
       <Footer />
+      <ApplicationModal 
+        isOpen={isModalOpen} 
+        onClose={() => setIsModalOpen(false)} 
+        initialRole={selectedRole} 
+      />
     </div>
   );
 }
