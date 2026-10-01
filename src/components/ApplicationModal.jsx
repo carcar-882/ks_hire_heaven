@@ -129,23 +129,20 @@ export default function ApplicationModal({ isOpen, onClose, initialRole }) {
     }, 1500);
   };
 
-  const handleOpenEmail = () => {
-    const subject = encodeURIComponent(`Application for ${formData.role} - Hire Heaven Software India Pvt Ltd`);
-    const body = encodeURIComponent(
-      `Dear Recruitment Team,\n\nI am applying for the ${formData.role} position.\n\n` +
-      `Name: ${formData.name}\n` +
-      `Contact Number: ${formData.phone}\n` +
-      `Email: ${formData.email}\n` +
-      `Job Role: ${formData.role}\n` +
-      `Experience: ${formData.experience}\n` +
-      `Current Location: ${formData.location}\n` +
-      `Current CTC: ${formData.currentCTC || 'N/A'}\n` +
-      `Expected CTC: ${formData.expectedCTC || 'N/A'}\n` +
-      `Notice Period: ${formData.noticePeriod}\n\n` +
-      `Message:\n${formData.message || 'N/A'}\n\n` +
-      `Regards,\n${formData.name}`
+  const handleOpenWhatsApp = () => {
+    const message = encodeURIComponent(
+      `*Application for ${formData.role}*\n\n` +
+      `*Name:* ${formData.name}\n` +
+      `*Contact Number:* ${formData.phone}\n` +
+      `*Email:* ${formData.email}\n` +
+      `*Experience:* ${formData.experience}\n` +
+      `*Location:* ${formData.location}\n` +
+      `*Current CTC:* ${formData.currentCTC || 'N/A'}\n` +
+      `*Expected CTC:* ${formData.expectedCTC || 'N/A'}\n` +
+      `*Notice Period:* ${formData.noticePeriod}\n\n` +
+      `*Message:*\n${formData.message || 'N/A'}`
     );
-    window.location.href = `mailto:${careersEmail}?subject=${subject}&body=${body}`;
+    window.open(`https://wa.me/917981036434?text=${message}`, '_blank');
   };
 
   if (!isOpen) return null;
@@ -197,9 +194,9 @@ export default function ApplicationModal({ isOpen, onClose, initialRole }) {
             <div className="modal-state fallback-state">
               <CheckCircle size={56} className="state-icon" />
               <h2>Application Ready</h2>
-              <p>Your application is ready to be sent. Please attach your resume to the email before sending.</p>
+              <p>Your application is ready to be sent. Please send this message via WhatsApp and attach your resume in the chat.</p>
               <div className="state-actions">
-                <button className="btn-primary" onClick={handleOpenEmail}>Open Email</button>
+                <button className="btn-primary" onClick={handleOpenWhatsApp}>Send via WhatsApp</button>
                 <button className="btn-secondary" onClick={onClose}>Close</button>
               </div>
             </div>
