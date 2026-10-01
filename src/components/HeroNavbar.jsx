@@ -3,10 +3,9 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import { ArrowRight, ChevronDown, Menu, Search, X } from 'lucide-react';
 import DropdownMenu from './DropdownMenu';
-import brandLogo from '../../img (1).png';
+import brandLogo from '../assets/logo.png';
 
 const contactHref = 'mailto:?subject=Cloud%20solutions%20enquiry%20-%20KS%20Hire%20Heaven';
-const caseStudiesHref = 'mailto:?subject=KS%20Hire%20Heaven%20case%20studies%20request';
 
 const navigationItems = [
   { label: 'Home', href: '/', hash: 'home' },
@@ -44,7 +43,6 @@ const navigationItems = [
       { label: 'Education & healthcare', href: '/', hash: 'industries', icon: '+' },
     ],
   },
-  { label: 'Case Studies', href: caseStudiesHref, external: true },
   { label: 'Careers', href: '/careers' },
   { label: 'Contact', href: contactHref, external: true },
 ];
