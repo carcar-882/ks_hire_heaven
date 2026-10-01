@@ -142,7 +142,7 @@ export default function ApplicationModal({ isOpen, onClose, initialRole }) {
       `*Notice Period:* ${formData.noticePeriod}\n\n` +
       `*Message:*\n${formData.message || 'N/A'}`
     );
-    window.open(`https://wa.me/917981036434?text=${message}`, '_blank');
+    window.open(`https://api.whatsapp.com/send?phone=917981036434&text=${message}`, '_blank');
   };
 
   if (!isOpen) return null;
