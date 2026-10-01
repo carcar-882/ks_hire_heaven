@@ -11,7 +11,6 @@ import {
   CloudJourney,
   CompanyOverview,
   CompanySnapshot,
-  TeamSection,
   VisionMission,
   WhyChooseUs,
   WhoWeHelp,
@@ -45,7 +44,6 @@ export default function About() {
         <CloudApproach />
         <CloudExpertise />
         <WhyChooseUs />
-        <TeamSection />
         <WorkingApproach />
         <WhoWeHelp />
         <ChallengeSolution />
