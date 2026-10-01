@@ -211,27 +211,26 @@ export function WhyChooseUs() {
 export function TeamSection() {
   return (
     <section className="about-team-section">
-      <SectionHeading number="06" label="OUR TEAM" title="People behind the technology." lead="Behind every cloud solution is a team focused on solving real business and technology challenges." />
+      <SectionHeading 
+        number="06" 
+        label="MEET OUR LEADERSHIP TEAM" 
+        title="Experienced leadership driving cloud innovation, digital transformation, and sustainable business growth." 
+        lead="Behind every technology transformation is a team committed to building reliable solutions, creating lasting partnerships, and enabling business growth." 
+      />
       <div className="about-team-grid">
         {teamMembers.map((member) => (
           <Reveal hover hoverY={-7} hoverScale={1.015} className="about-team-card" key={member.id}>
-            <div className="about-team-portrait" role="img" aria-label="Professional team portrait placeholder">
+            <div className="about-team-portrait" role="img" aria-label={member.image ? `${member.name} portrait` : `Professional placeholder for ${member.name}`}>
               {member.image ? (
-                <img src={member.image} alt={`${member.name} portrait`} />
+                <img src={member.image} alt={`${member.name} portrait`} style={{ objectFit: 'cover', objectPosition: 'center' }} />
               ) : (
-                <><UsersRound size={58} strokeWidth={1.1} aria-hidden="true" /><span>TEAM MEMBER</span></>
+                <span className="about-team-initials">{member.initials}</span>
               )}
             </div>
             <div className="about-team-details">
-              <span className="about-kicker">PROFILE TO BE COMPLETED</span>
               <h3>{member.name}</h3>
               <p className="about-team-role">{member.role}</p>
               <p>{member.description}</p>
-              {member.linkedin ? (
-                <a className="about-linkedin-placeholder" href={member.linkedin} target="_blank" rel="noreferrer">LinkedIn profile <Linkedin size={15} aria-hidden="true" /></a>
-              ) : (
-                <span className="about-linkedin-placeholder">LinkedIn profile to be provided <Linkedin size={15} aria-hidden="true" /></span>
-              )}
             </div>
           </Reveal>
         ))}

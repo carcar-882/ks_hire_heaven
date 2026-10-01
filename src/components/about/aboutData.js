@@ -48,16 +48,32 @@ export const customerTypes = [
 
 export const cloudJourney = ['Adopt', 'Modernize', 'Secure', 'Optimize', 'Grow'];
 
-import teamMemberImg from '../../assets/team-member.png';
+import mdImg from '../../assets/team-md.jpg';
 
 export const teamMembers = [
   {
-    id: 'team-member-1',
-    name: 'Name to be provided',
-    role: 'Role to be provided',
-    description: 'Profile details will be added when approved.',
-    image: teamMemberImg,
-    linkedin: '',
+    id: 'kanakam-sudheer-babu',
+    name: 'Kanakam Sudheer Babu',
+    role: 'Managing Director (MD)',
+    description: 'Providing strategic leadership and guiding the organization\'s long-term vision, technology direction, and business growth.',
+    image: mdImg,
+    initials: 'KSB',
+  },
+  {
+    id: 'kanakam-tejaswini',
+    name: 'Kanakam Tejaswini',
+    role: 'Chief Executive Officer (CEO)',
+    description: 'Leading the company\'s strategic direction, business operations, growth initiatives, and organizational development.',
+    image: null,
+    initials: 'KT',
+  },
+  {
+    id: 'kavya-kanakam',
+    name: 'Kavya Kanakam',
+    role: 'Corporate / Functional Director',
+    description: 'Supporting corporate functions, operational coordination, organizational processes, and functional business initiatives.',
+    image: null,
+    initials: 'KK',
   },
 ];
 
