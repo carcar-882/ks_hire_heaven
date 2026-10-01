@@ -49,6 +49,7 @@ export const customerTypes = [
 export const cloudJourney = ['Adopt', 'Modernize', 'Secure', 'Optimize', 'Grow'];
 
 import mdImg from '../../assets/team-md.jpg';
+import ceoImg from '../../assets/team-ceo.jpg';
 
 export const teamMembers = [
   {
@@ -64,7 +65,7 @@ export const teamMembers = [
     name: 'Kanakam Tejaswini',
     role: 'Chief Executive Officer (CEO)',
     description: 'Leading the company\'s strategic direction, business operations, growth initiatives, and organizational development.',
-    image: null,
+    image: ceoImg,
     initials: 'KT',
   },
   {
