@@ -6,7 +6,6 @@ import DropdownMenu from './DropdownMenu';
 import brandLogo from '../../img (1).png';
 
 const contactHref = 'mailto:?subject=Cloud%20solutions%20enquiry%20-%20KS%20Hire%20Heaven';
-const careerHref = 'mailto:?subject=Careers%20at%20KS%20Hire%20Heaven';
 const caseStudiesHref = 'mailto:?subject=KS%20Hire%20Heaven%20case%20studies%20request';
 
 const navigationItems = [
@@ -46,7 +45,7 @@ const navigationItems = [
     ],
   },
   { label: 'Case Studies', href: caseStudiesHref, external: true },
-  { label: 'Careers', href: careerHref, external: true },
+  { label: 'Careers', href: '/careers' },
   { label: 'Contact', href: contactHref, external: true },
 ];
 
@@ -62,6 +61,7 @@ export default function HeroNavbar() {
   const navigate = useNavigate();
   const location = useLocation();
   const isAboutPage = location.pathname.replace(/\/$/, '') === '/about';
+  const isCareersPage = location.pathname.replace(/\/$/, '') === '/careers';
   const [openMenu, setOpenMenu] = useState(null);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [expandedMobileMenu, setExpandedMobileMenu] = useState(null);
@@ -114,8 +114,8 @@ export default function HeroNavbar() {
     if (item.external) return; // let browser handle mailto
     event.preventDefault();
     closeOverlays();
-    if (item.href === '/about') {
-      navigate('/about');
+    if (item.href === '/about' || item.href === '/careers') {
+      navigate(item.href);
       return;
     }
     // Internal hash link — navigate to home then scroll
@@ -132,7 +132,8 @@ export default function HeroNavbar() {
     if (!hasDropdown) {
       const isActive =
         (item.label === 'About' && isAboutPage) ||
-        (item.label === 'Home' && !isAboutPage);
+        (item.label === 'Careers' && isCareersPage) ||
+        (item.label === 'Home' && !isAboutPage && !isCareersPage);
       return (
         <a
           className={`${className}${isActive ? ' is-active' : ''}`}
@@ -305,8 +306,8 @@ export default function HeroNavbar() {
               <a
                 key={item.label}
                 href={item.external ? item.href : item.href + (item.hash ? `#${item.hash}` : '')}
-                className={(item.label === 'About' && isAboutPage) || (item.label === 'Home' && !isAboutPage) ? 'is-active' : undefined}
-                aria-current={(item.label === 'About' && isAboutPage) || (item.label === 'Home' && !isAboutPage) ? 'page' : undefined}
+                className={(item.label === 'About' && isAboutPage) || (item.label === 'Careers' && isCareersPage) || (item.label === 'Home' && !isAboutPage && !isCareersPage) ? 'is-active' : undefined}
+                aria-current={(item.label === 'About' && isAboutPage) || (item.label === 'Careers' && isCareersPage) || (item.label === 'Home' && !isAboutPage && !isCareersPage) ? 'page' : undefined}
                 onClick={(e) => handleNavClick(item, e)}
               >
                 {item.label}

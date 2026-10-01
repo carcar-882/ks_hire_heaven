@@ -10,6 +10,7 @@ const companyLinks = [
   { label: 'Cloud Platforms', href: '/#cloud-platforms' },
   { label: 'Industries', href: '/#industries' },
   { label: 'How We Work', href: '/#how-we-work' },
+  { label: 'Careers', href: '/careers' },
   { label: 'Contact Us', href: '/contact' },
 ];
 
