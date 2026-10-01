@@ -119,7 +119,32 @@
   object-fit: contain;
 }
 
+.site-footer-youtube-link {
+  min-height: 42px;
+  margin-top: 15px;
+  padding: 0 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid rgba(74,133,190,0.17);
+  border-radius: 12px;
+  color: #173c68;
+  background: rgba(255,255,255,0.58);
+  box-shadow: 0 6px 17px rgba(35,101,167,0.06), inset 0 1px 0 rgba(255,255,255,0.94);
+  font-size: 12px;
+  font-weight: 650;
+  text-decoration: none;
+  transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
+}
 
+.site-footer-youtube-link svg:first-child {
+  color: #e34242;
+}
+
+.site-footer-youtube-link:hover {
+  border-color: rgba(8,120,255,0.28);
+  box-shadow: 0 10px 21px rgba(35,101,167,0.1), inset 0 1px 0 rgba(255,255,255,0.96);
+}
 
 .site-footer-tagline {
   max-width: 255px;
