@@ -3,6 +3,7 @@ import HomeCloudPlatforms from './home/HomeCloudPlatforms';
 import HomeIndustries from './home/HomeIndustries';
 import HomeHowWeWork from './home/HomeHowWeWork';
 import HomeFaq from './home/HomeFaq';
+import HomeStats from './home/HomeStats';
 import Hero from './Hero';
 import Footer from './Footer';
 
@@ -11,6 +12,7 @@ export function AboutSection({ platforms, benefits, journey }) {
     <>
       <div className="page-shell">
         <Hero platforms={platforms} benefits={benefits} />
+        <HomeStats />
         <main className="about-page">
           <CloudServices />
           <HomeCloudPlatforms />

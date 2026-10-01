@@ -1,0 +1,156 @@
+/* ── Home Stats Section ─────────────────────────────────────────── */
+.home-stats {
+  position: relative;
+  z-index: 1;
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+  padding: 0 32px;
+  overflow: hidden;
+}
+
+.home-stats-inner {
+  max-width: 1160px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+  border-radius: 24px;
+  overflow: hidden;
+  background: linear-gradient(135deg, #0a1628 0%, #0d2044 50%, #0a1a38 100%);
+  box-shadow:
+    0 30px 80px rgba(8, 100, 210, 0.22),
+    0 0 0 1px rgba(255, 255, 255, 0.07),
+    inset 0 1px 0 rgba(255, 255, 255, 0.10);
+}
+
+/* ── Individual stat card ───────────────────────────────────────── */
+.home-stat-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 52px 28px 48px;
+  text-align: center;
+  overflow: hidden;
+  transition: background 300ms ease;
+}
+
+/* Vertical dividers between cards */
+.home-stat-card + .home-stat-card::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 20%;
+  height: 60%;
+  width: 1px;
+  background: linear-gradient(180deg, transparent, rgba(255,255,255,0.12), transparent);
+}
+
+.home-stat-card:hover {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+/* Glow blob behind the number */
+.home-stat-glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(8, 120, 255, 0.22), transparent 70%);
+  pointer-events: none;
+  transition: opacity 300ms ease;
+  opacity: 0;
+}
+
+.home-stat-card:hover .home-stat-glow {
+  opacity: 1;
+}
+
+/* ── Number ─────────────────────────────────────────────────────── */
+.home-stat-number {
+  font-size: clamp(38px, 5vw, 58px);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  background: linear-gradient(135deg, #4db8ff 0%, #0878ff 50%, #a855f7 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-family: 'Inter', system-ui, sans-serif;
+}
+
+/* ── Thin divider line ──────────────────────────────────────────── */
+.home-stat-divider {
+  display: block;
+  width: 32px;
+  height: 2px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, #4db8ff, #a855f7);
+  opacity: 0.6;
+}
+
+/* ── Label ──────────────────────────────────────────────────────── */
+.home-stat-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.65);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  line-height: 1.4;
+}
+
+/* ── Responsive ─────────────────────────────────────────────────── */
+@media (max-width: 860px) {
+  .home-stats-inner {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .home-stat-card + .home-stat-card::before {
+    top: 10%;
+    height: 80%;
+  }
+
+  /* Remove left border on 1st column items */
+  .home-stat-card:nth-child(2n+1)::before {
+    display: none;
+  }
+
+  /* Horizontal divider between rows */
+  .home-stat-card:nth-child(3),
+  .home-stat-card:nth-child(4) {
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+  }
+}
+
+@media (max-width: 520px) {
+  .home-stats {
+    padding: 0 16px;
+  }
+
+  .home-stats-inner {
+    grid-template-columns: repeat(2, 1fr);
+    border-radius: 18px;
+  }
+
+  .home-stat-card {
+    padding: 36px 16px 32px;
+    gap: 8px;
+  }
+
+  .home-stat-number {
+    font-size: 36px;
+  }
+
+  .home-stat-label {
+    font-size: 11px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home-stat-glow { display: none; }
+}
