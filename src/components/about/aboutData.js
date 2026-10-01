@@ -50,6 +50,7 @@ export const cloudJourney = ['Adopt', 'Modernize', 'Secure', 'Optimize', 'Grow']
 
 import mdImg from '../../assets/team-md.jpg';
 import ceoImg from '../../assets/team-ceo.jpg';
+import dirImg from '../../assets/team-director.jpg';
 
 export const teamMembers = [
   {
@@ -73,7 +74,7 @@ export const teamMembers = [
     name: 'Kavya Kanakam',
     role: 'Corporate / Functional Director',
     description: 'Supporting corporate functions, operational coordination, organizational processes, and functional business initiatives.',
-    image: null,
+    image: dirImg,
     initials: 'KK',
   },
 ];
