@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import { ArrowRight, ChevronDown, Menu, Search, X } from 'lucide-react';
 import DropdownMenu from './DropdownMenu';
@@ -9,45 +10,58 @@ const careerHref = 'mailto:?subject=Careers%20at%20KS%20Hire%20Heaven';
 const caseStudiesHref = 'mailto:?subject=KS%20Hire%20Heaven%20case%20studies%20request';
 
 const navigationItems = [
-  { label: 'Home', href: '/#home' },
+  { label: 'Home', href: '/', hash: 'home' },
   { label: 'About', href: '/about' },
   {
     label: 'Services',
-    href: '/#services',
+    href: '/',
+    hash: 'services',
     dropdown: [
-      { label: 'Azure-focused solutions', href: '/#services', icon: 'A' },
-      { label: 'Multi-cloud capabilities', href: '/#services', icon: '◎' },
-      { label: 'Security-led delivery', href: '/#services', icon: '+' },
-      { label: 'Cloud journey', href: '/#how-we-work', icon: '↗' },
+      { label: 'Azure-focused solutions', href: '/', hash: 'services', icon: 'A' },
+      { label: 'Multi-cloud capabilities', href: '/', hash: 'services', icon: '◎' },
+      { label: 'Security-led delivery', href: '/', hash: 'services', icon: '+' },
+      { label: 'How we work', href: '/', hash: 'how-we-work', icon: '↗' },
     ],
   },
   {
     label: 'Cloud Platforms',
-    href: '/#cloud-platforms',
+    href: '/',
+    hash: 'cloud-platforms',
     dropdown: [
-      { label: 'Microsoft Azure', href: '/#cloud-platforms', icon: 'A' },
-      { label: 'Amazon Web Services', href: '/#cloud-platforms', icon: 'AWS' },
-      { label: 'Google Cloud', href: '/#cloud-platforms', icon: 'GC' },
-      { label: 'Multi-cloud solutions', href: '/#cloud-platforms', icon: '◎' },
+      { label: 'Microsoft Azure', href: '/', hash: 'cloud-platforms', icon: 'A' },
+      { label: 'Amazon Web Services', href: '/', hash: 'cloud-platforms', icon: 'AWS' },
+      { label: 'Google Cloud', href: '/', hash: 'cloud-platforms', icon: 'GC' },
+      { label: 'Multi-cloud solutions', href: '/', hash: 'cloud-platforms', icon: '◎' },
     ],
   },
   {
     label: 'Industries',
-    href: '/#industries',
+    href: '/',
+    hash: 'industries',
     dropdown: [
-      { label: 'Startups & scale-ups', href: '/#industries', icon: '↗' },
-      { label: 'Small and medium business', href: '/#industries', icon: '▣' },
-      { label: 'Enterprise', href: '/#industries', icon: '▤' },
-      { label: 'Education & healthcare', href: '/#industries', icon: '+' },
+      { label: 'Startups & scale-ups', href: '/', hash: 'industries', icon: '↗' },
+      { label: 'Small and medium business', href: '/', hash: 'industries', icon: '▣' },
+      { label: 'Enterprise', href: '/', hash: 'industries', icon: '▤' },
+      { label: 'Education & healthcare', href: '/', hash: 'industries', icon: '+' },
     ],
   },
-  { label: 'Case Studies', href: caseStudiesHref },
-  { label: 'Careers', href: careerHref },
-  { label: 'Contact', href: contactHref },
+  { label: 'Case Studies', href: caseStudiesHref, external: true },
+  { label: 'Careers', href: careerHref, external: true },
+  { label: 'Contact', href: contactHref, external: true },
 ];
 
+function scrollToSection(hash) {
+  if (!hash) return;
+  const el = document.getElementById(hash);
+  if (el) {
+    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+}
+
 export default function HeroNavbar() {
-  const isAboutPage = window.location.pathname.replace(/\/$/, '') === '/about';
+  const navigate = useNavigate();
+  const location = useLocation();
+  const isAboutPage = location.pathname.replace(/\/$/, '') === '/about';
   const [openMenu, setOpenMenu] = useState(null);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [expandedMobileMenu, setExpandedMobileMenu] = useState(null);
@@ -55,9 +69,19 @@ export default function HeroNavbar() {
   const [searchQuery, setSearchQuery] = useState('');
   const searchInputRef = useRef(null);
 
+  // Handle hash scrolling after navigation
+  useEffect(() => {
+    const hash = location.hash?.replace('#', '');
+    if (hash) {
+      // slight delay to let the page render
+      const timer = setTimeout(() => scrollToSection(hash), 80);
+      return () => clearTimeout(timer);
+    }
+  }, [location]);
+
   const searchResults = useMemo(() => {
     const entries = navigationItems.flatMap((item) => [
-      { label: item.label, href: item.href },
+      { label: item.label, href: item.href, hash: item.hash, external: item.external },
       ...(item.dropdown || []),
     ]);
     const query = searchQuery.trim().toLowerCase();
@@ -86,17 +110,44 @@ export default function HeroNavbar() {
     setSearchOpen(false);
   };
 
+  const handleNavClick = (item, event) => {
+    if (item.external) return; // let browser handle mailto
+    event.preventDefault();
+    closeOverlays();
+    if (item.href === '/about') {
+      navigate('/about');
+      return;
+    }
+    // Internal hash link — navigate to home then scroll
+    if (location.pathname !== '/') {
+      navigate('/');
+      setTimeout(() => scrollToSection(item.hash), 120);
+    } else {
+      scrollToSection(item.hash);
+    }
+  };
+
   const renderLink = (item, className = 'hero-nav-link') => {
     const hasDropdown = Boolean(item.dropdown?.length);
     if (!hasDropdown) {
-      const isActive = (item.label === 'About' && isAboutPage) || (item.label === 'Home' && !isAboutPage);
-      return <a className={`${className}${isActive ? ' is-active' : ''}`} href={item.href} aria-current={isActive ? 'page' : undefined} onClick={closeOverlays}>{item.label}</a>;
+      const isActive =
+        (item.label === 'About' && isAboutPage) ||
+        (item.label === 'Home' && !isAboutPage);
+      return (
+        <a
+          className={`${className}${isActive ? ' is-active' : ''}`}
+          href={item.external ? item.href : item.href + (item.hash ? `#${item.hash}` : '')}
+          aria-current={isActive ? 'page' : undefined}
+          onClick={(e) => handleNavClick(item, e)}
+        >
+          {item.label}
+        </a>
+      );
     }
 
     return (
       <div
-        className="hero-nav-item"
-        key={item.label}
+        className="hero-nav-item-inner"
         onMouseEnter={() => setOpenMenu(item.label)}
         onMouseLeave={() => setOpenMenu(null)}
       >
@@ -113,6 +164,7 @@ export default function HeroNavbar() {
           items={item.dropdown}
           isOpen={openMenu === item.label}
           onClose={closeOverlays}
+          onItemClick={handleNavClick}
         />
       </div>
     );
@@ -128,9 +180,9 @@ export default function HeroNavbar() {
     >
       <motion.a
         className="hero-brand"
-        href="/#home"
+        href="/"
         aria-label="KS Hire Heaven home"
-        onClick={closeOverlays}
+        onClick={(e) => { e.preventDefault(); closeOverlays(); navigate('/'); setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 60); }}
         whileHover={{ scale: 1.02 }}
         whileTap={{ scale: 0.98 }}
       >
@@ -207,7 +259,13 @@ export default function HeroNavbar() {
             </div>
             <div className="hero-search-results" aria-live="polite">
               {searchResults.length ? searchResults.map((item, index) => (
-                <a key={`${item.label}-${index}`} href={item.href} onClick={closeOverlays}>{item.label}<ArrowRight size={14} /></a>
+                <a
+                  key={`${item.label}-${index}`}
+                  href={item.external ? item.href : item.href + (item.hash ? `#${item.hash}` : '')}
+                  onClick={(e) => handleNavClick(item, e)}
+                >
+                  {item.label}<ArrowRight size={14} />
+                </a>
               )) : <p>No matching sections found.</p>}
             </div>
           </motion.div>
@@ -232,7 +290,13 @@ export default function HeroNavbar() {
                 {expandedMobileMenu === item.label && (
                   <div className="hero-mobile-submenu">
                     {item.dropdown.map((subitem) => (
-                      <a key={subitem.label} href={subitem.href} onClick={closeOverlays}>{subitem.label}</a>
+                      <a
+                        key={subitem.label}
+                        href={subitem.external ? subitem.href : subitem.href + (subitem.hash ? `#${subitem.hash}` : '')}
+                        onClick={(e) => handleNavClick(subitem, e)}
+                      >
+                        {subitem.label}
+                      </a>
                     ))}
                   </div>
                 )}
@@ -240,10 +304,10 @@ export default function HeroNavbar() {
             ) : (
               <a
                 key={item.label}
-                href={item.href}
+                href={item.external ? item.href : item.href + (item.hash ? `#${item.hash}` : '')}
                 className={(item.label === 'About' && isAboutPage) || (item.label === 'Home' && !isAboutPage) ? 'is-active' : undefined}
                 aria-current={(item.label === 'About' && isAboutPage) || (item.label === 'Home' && !isAboutPage) ? 'page' : undefined}
-                onClick={closeOverlays}
+                onClick={(e) => handleNavClick(item, e)}
               >
                 {item.label}
               </a>

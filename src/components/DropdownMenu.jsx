@@ -1,7 +1,7 @@
 import { AnimatePresence, motion } from 'framer-motion';
 import { ArrowRight, ChevronRight } from 'lucide-react';
 
-export default function DropdownMenu({ items, isOpen, onClose }) {
+export default function DropdownMenu({ items, isOpen, onClose, onItemClick }) {
   if (!items || items.length === 0) return null;
 
   return (
@@ -15,7 +15,12 @@ export default function DropdownMenu({ items, isOpen, onClose }) {
           transition={{ duration: 0.22, ease: 'easeOut' }}
         >
           {items.map((item) => (
-            <a key={item.label} href={item.href || '#'} className="dropdown-item" onClick={onClose}>
+            <a
+              key={item.label}
+              href={item.external ? item.href : (item.href || '/') + (item.hash ? `#${item.hash}` : '')}
+              className="dropdown-item"
+              onClick={(e) => onItemClick ? onItemClick(item, e) : onClose?.()}
+            >
               <span className="dropdown-icon">{item.icon || <ChevronRight size={14} />}</span>
               <span>{item.label}</span>
               <ArrowRight size={12} className="dropdown-arrow" />
