@@ -3,7 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import { ArrowRight, ChevronDown, Menu, Search, X } from 'lucide-react';
 import DropdownMenu from './DropdownMenu';
-import brandLogo from '../assets/logo.png';
+import brandLogo from '../assets/logo.jpg';
 
 const contactHref = 'mailto:?subject=Cloud%20solutions%20enquiry%20-%20KS%20Hire%20Heaven';
 
@@ -185,10 +185,8 @@ export default function HeroNavbar() {
         whileHover={{ scale: 1.02 }}
         whileTap={{ scale: 0.98 }}
       >
-        <span className="hero-brand-mark"><img src={brandLogo} alt="" /></span>
-        <span className="hero-brand-copy">
-          <span className="hero-brand-name">HIRE HEAVEN</span>
-          <span className="hero-brand-subtitle">SOFTWARE INDIA PVT LTD</span>
+        <span className="hero-brand-mark">
+          <img src={brandLogo} alt="Hire Heaven Software India Private Limited Logo" />
         </span>
       </motion.a>
 

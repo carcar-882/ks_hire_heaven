@@ -82,7 +82,7 @@ export default function Footer() {
             whileHover={reduceMotion ? undefined : { scale: 1.03 }}
             whileTap={reduceMotion ? undefined : { scale: 0.97 }}
           >
-            <img src={brandLogo} alt="KS Hire Heaven Software India Pvt Ltd" />
+            <img src={brandLogo} alt="Hire Heaven Software India Private Limited Logo" />
           </motion.a>
           <motion.a
             className="site-footer-youtube"
@@ -98,8 +98,8 @@ export default function Footer() {
             <span>Watch Our Channel</span>
             <ArrowRight size={15} className="site-footer-youtube-arrow" aria-hidden="true" />
           </motion.a>
-          <p className="site-footer-tagline">{company.tagline}</p>
-          <p className="site-footer-description">Helping businesses adopt, manage, secure, and optimize modern cloud environments.</p>
+          <p className="site-footer-tagline">Cloud Solutions. Digital Innovation. Business Growth.</p>
+          <p className="site-footer-description">Hire Heaven Software India Private Limited is an emerging technology company focused on cloud solutions, digital transformation, Azure infrastructure, data, DevOps, analytics, and business technology.</p>
         </motion.section>
 
         <motion.nav className="site-footer-column" aria-label="Company links" variants={footerReveal} transition={{ duration: reduceMotion ? 0.2 : 0.42 }}>

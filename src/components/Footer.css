@@ -101,9 +101,16 @@
 }
 
 .site-footer-logo {
-  width: 88px;
-  height: 88px;
+  width: 180px;
+  height: 65px;
   display: block;
+}
+
+@media (max-width: 768px) {
+  .site-footer-logo {
+    width: 150px;
+    height: 55px;
+  }
 }
 
 .site-footer-logo img {

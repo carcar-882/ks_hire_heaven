@@ -72,18 +72,15 @@
 .hero-brand {
   position: relative;
   z-index: 1;
-  flex: 0 0 252px;
   display: flex;
   align-items: center;
-  gap: 11px;
   color: #0b1f44;
   text-decoration: none;
 }
 
 .hero-brand-mark {
-  width: 58px;
-  height: 58px;
-  flex: 0 0 58px;
+  width: 160px;
+  height: 60px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -95,26 +92,17 @@
   object-fit: contain;
 }
 
-.hero-brand-copy {
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-  white-space: nowrap;
+@media (max-width: 992px) {
+  .hero-brand-mark {
+    width: 145px;
+  }
 }
 
-.hero-brand-name {
-  font-family: 'Chakra Petch', sans-serif;
-  font-size: 20px;
-  font-weight: 700;
-  line-height: 1;
-}
-
-.hero-brand-subtitle {
-  font-family: 'DM Sans', sans-serif;
-  font-size: 10px;
-  font-weight: 700;
-  line-height: 1.1;
-  letter-spacing: 0.035em;
+@media (max-width: 768px) {
+  .hero-brand-mark {
+    width: 130px;
+    height: 50px;
+  }
 }
 
 .hero-main-nav {
