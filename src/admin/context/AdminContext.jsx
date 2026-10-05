@@ -17,6 +17,25 @@ export const AdminProvider = ({ children }) => {
 
   const API_URL = 'http://localhost:3001';
 
+  // Normalize API data to guarantee array fields exist and prevent .map() crashes
+  const normalizeJob = (job) => ({
+    ...job,
+    responsibilities: Array.isArray(job?.responsibilities) ? job.responsibilities : [],
+    // Safely migrate old 'requiredSkills' to the new 'required_skills' standard
+    required_skills: Array.isArray(job?.required_skills) 
+      ? job.required_skills 
+      : Array.isArray(job?.requiredSkills) 
+        ? job.requiredSkills 
+        : Array.isArray(job?.technologies)
+          ? job.technologies
+          : [],
+  });
+
+  const normalizeApplication = (app) => ({
+    ...app,
+    statusHistory: Array.isArray(app?.statusHistory) ? app.statusHistory : []
+  });
+
   const fetchData = async () => {
     try {
       setLoading(true);
@@ -32,10 +51,10 @@ export const AdminProvider = ({ children }) => {
       const recs = await recsRes.json();
       const ints = await intRes.json();
       
-      setApplications(apps);
-      setJobs(jbs);
-      setRecruiters(recs);
-      setInterviews(ints);
+      setApplications(Array.isArray(apps) ? apps.map(normalizeApplication) : []);
+      setJobs(Array.isArray(jbs) ? jbs.map(normalizeJob) : []);
+      setRecruiters(Array.isArray(recs) ? recs : []);
+      setInterviews(Array.isArray(ints) ? ints : []);
       setError(null);
     } catch (err) {
       console.error("Failed to fetch data", err);

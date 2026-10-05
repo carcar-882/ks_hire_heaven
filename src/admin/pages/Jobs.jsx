@@ -136,7 +136,7 @@ const Jobs = () => {
           
           <div style={{marginBottom: '24px'}}>
             <label style={{display: 'block', marginBottom: '8px', fontWeight: 600}}>2. Responsibilities *</label>
-            {currentJob.responsibilities.map((resp, idx) => (
+            {(currentJob.responsibilities || []).map((resp, idx) => (
               <div key={idx} style={{display: 'flex', gap: '8px', marginBottom: '8px'}}>
                 <input type="text" value={resp} onChange={(e) => handleArrayChange('responsibilities', idx, e.target.value)} placeholder="e.g. Design enterprise-grade Azure cloud architecture." style={{flex: 1, padding: '10px', borderRadius: '8px', border: '1px solid var(--border-color)'}} />
                 <button type="button" onClick={() => moveArrayItem('responsibilities', idx, -1)} className="btn-secondary" style={{padding: '0 12px'}}>↑</button>
@@ -175,7 +175,7 @@ const Jobs = () => {
 
           <div style={{marginBottom: '24px'}}>
             <label style={{display: 'block', marginBottom: '8px', fontWeight: 600}}>5. Required Skills *</label>
-            {currentJob.required_skills.map((skill, idx) => (
+            {(currentJob.required_skills || []).map((skill, idx) => (
               <div key={idx} style={{display: 'flex', gap: '8px', marginBottom: '8px'}}>
                 <input type="text" value={skill} onChange={(e) => handleArrayChange('required_skills', idx, e.target.value)} placeholder="e.g. Azure Architecture" style={{flex: 1, padding: '10px', borderRadius: '8px', border: '1px solid var(--border-color)'}} />
                 <button type="button" onClick={() => removeArrayItem('required_skills', idx)} className="btn-secondary" style={{padding: '0 12px', color: 'var(--danger)'}}><Trash2 size={16} /></button>
