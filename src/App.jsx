@@ -12,6 +12,7 @@ import Interviews from './admin/pages/Interviews';
 import Analytics from './admin/pages/Analytics';
 import Settings from './admin/pages/Settings';
 import Placeholder from './admin/pages/Placeholder';
+import AdminErrorBoundary from './admin/components/AdminErrorBoundary';
 import { AdminProvider } from './admin/context/AdminContext';
 
 const platforms = [
@@ -76,9 +77,11 @@ export default function App() {
         </AdminProvider>
       } />
       <Route path="/admin" element={
-        <AdminProvider>
-          <AdminLayout />
-        </AdminProvider>
+        <AdminErrorBoundary>
+          <AdminProvider>
+            <AdminLayout />
+          </AdminProvider>
+        </AdminErrorBoundary>
       }>
         <Route index element={<Navigate to="/admin/dashboard" replace />} />
         <Route path="dashboard" element={<Dashboard />} />
