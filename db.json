@@ -41,7 +41,23 @@
         "Cloud Migration",
         "Enterprise Architecture"
       ],
-      "status": "Published"
+      "status": "Archived",
+      "required_skills": [
+        "Azure",
+        "Azure Architecture",
+        "Azure IaaS",
+        "Azure Migrate",
+        "Azure Site Recovery",
+        "Azure Virtual Machines",
+        "Azure Networking",
+        "Azure Storage",
+        "Azure Security",
+        "Disaster Recovery",
+        "High Availability",
+        "Cloud Migration",
+        "Enterprise Architecture"
+      ],
+      "archived_at": "2026-10-05T15:38:16.052Z"
     },
     {
       "id": 2,
@@ -81,7 +97,23 @@
         "Hybrid Cloud",
         "Enterprise Cloud Architecture"
       ],
-      "status": "Published"
+      "status": "Archived",
+      "required_skills": [
+        "10+ years IT experience",
+        "Azure Architecture",
+        "Azure IaaS",
+        "Azure Migrate",
+        "Azure Site Recovery",
+        "Azure Networking",
+        "Azure Virtual Machines",
+        "Azure Storage",
+        "Azure Monitor",
+        "Azure Security",
+        "Disaster Recovery",
+        "Hybrid Cloud",
+        "Enterprise Cloud Architecture"
+      ],
+      "archived_at": "2026-10-05T15:38:15.211Z"
     },
     {
       "id": 3,
@@ -126,7 +158,24 @@
         "Hybrid Networking",
         "Network Security"
       ],
-      "status": "Published"
+      "status": "Archived",
+      "required_skills": [
+        "4+ years relevant experience",
+        "Azure Networking",
+        "VNet",
+        "Subnets",
+        "NSG",
+        "Azure Firewall",
+        "VPN Gateway",
+        "ExpressRoute",
+        "Load Balancer",
+        "Application Gateway",
+        "DNS",
+        "Routing",
+        "Hybrid Networking",
+        "Network Security"
+      ],
+      "archived_at": "2026-10-05T15:38:13.595Z"
     },
     {
       "id": 4,

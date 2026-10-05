@@ -23,6 +23,7 @@ const Jobs = () => {
   // Modals state: 'list', 'create', 'edit', 'view'
   const [viewState, setViewState] = useState('list');
   const [currentJob, setCurrentJob] = useState(DEFAULT_JOB);
+  const [showArchived, setShowArchived] = useState(false);
   
   // Handlers for form arrays
   const handleArrayChange = (field, index, value) => {
@@ -102,14 +103,22 @@ const Jobs = () => {
     await updateJob(job.id, { ...job, archived_at: new Date().toISOString(), status: 'Archived' });
   };
 
+  const handleUnarchiveJob = async (job) => {
+    const { archived_at, ...restJob } = job;
+    await updateJob(job.id, { ...restJob, status: 'Draft' });
+  };
+
   // Stats
   const activeJobs = jobs.filter(j => !j.archived_at);
+  const archivedJobs = jobs.filter(j => j.archived_at);
+  const displayedJobsList = showArchived ? archivedJobs : activeJobs;
+
   const totalJobs = activeJobs.length;
   const published = activeJobs.filter(j => j.status === 'Published').length;
   const drafts = activeJobs.filter(j => j.status === 'Draft').length;
   const closed = activeJobs.filter(j => j.status === 'Closed').length;
 
-  const filteredJobs = activeJobs.filter(job => 
+  const filteredJobs = displayedJobsList.filter(job => 
     job.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
     job.job_id?.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -272,6 +281,9 @@ const Jobs = () => {
           <p style={{margin: 0, color: 'var(--text-muted)', fontSize: '0.875rem'}}>Manage, create, publish and track all job openings.</p>
         </div>
         <div style={{display: 'flex', gap: '12px'}}>
+          <button className="btn-secondary" onClick={() => setShowArchived(!showArchived)}>
+            {showArchived ? 'View Active Jobs' : 'View Archived'}
+          </button>
           <button className="btn-secondary">
             <Download size={16} /> Export Jobs
           </button>
@@ -345,12 +357,22 @@ const Jobs = () => {
                       <button className="icon-btn" onClick={() => { setCurrentJob(job); setViewState('view'); }} title="View Details">
                         <Eye size={16} />
                       </button>
-                      <button className="icon-btn" onClick={() => { setCurrentJob(job); setViewState('edit'); }} title="Edit Job">
-                        <Edit2 size={16} />
-                      </button>
-                      <button className="icon-btn" onClick={() => handleArchiveJob(job)} title="Archive Job">
-                        <Archive size={16} />
-                      </button>
+                      
+                      {!job.archived_at ? (
+                        <>
+                          <button className="icon-btn" onClick={() => { setCurrentJob(job); setViewState('edit'); }} title="Edit Job">
+                            <Edit2 size={16} />
+                          </button>
+                          <button className="icon-btn" onClick={() => handleArchiveJob(job)} title="Archive Job">
+                            <Archive size={16} />
+                          </button>
+                        </>
+                      ) : (
+                        <button className="btn-secondary" style={{padding: '4px 8px', fontSize: '12px'}} onClick={() => handleUnarchiveJob(job)} title="Restore Job">
+                          Unarchive
+                        </button>
+                      )}
+                      
                       <button className="icon-btn" style={{color: 'var(--danger)'}} onClick={() => handleDeleteJob(job.id)} title="Hard Delete">
                         <Trash2 size={16} />
                       </button>
