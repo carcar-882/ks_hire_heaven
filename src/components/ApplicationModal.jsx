@@ -4,20 +4,7 @@ import { X, CheckCircle, AlertCircle, Loader2 } from 'lucide-react';
 import { careersEmail } from '../data/jobs';
 import '../styles/careers/application-modal.css';
 
-const AVAILABLE_ROLES = [
-  'Azure Architect',
-  'Azure Cloud Architect',
-  'Azure Network Engineer',
-  'Azure Cloud Engineer',
-  'Azure DevOps Engineer',
-  'Scrum Master',
-  'Azure Data Engineer',
-  'HR Recruiter',
-  'Power BI Developer',
-  'Business Analyst'
-];
-
-export default function ApplicationModal({ isOpen, onClose, initialRole }) {
+export default function ApplicationModal({ isOpen, onClose, initialRole, jobId }) {
   const modalRef = useRef(null);
   
   const [formData, setFormData] = useState({
@@ -129,10 +116,20 @@ export default function ApplicationModal({ isOpen, onClose, initialRole }) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           ...formData,
+          job_id: jobId, // Attach database job ID
           dateApplied: new Date().toISOString(),
           status: 'New',
-          // Since it's a mock backend, we can't upload files easily, so we just save the name
-          resumeName: resume ? resume.name : null
+          statusHistory: [{
+            status: 'New',
+            changedAt: new Date().toISOString(),
+            changedBy: 'System'
+          }],
+          resume: resume ? {
+            name: resume.name,
+            size: resume.size,
+            type: resume.type,
+            url: `/uploads/${resume.name}` // Mock URL for json-server
+          } : null
         })
       });
       
@@ -245,13 +242,7 @@ export default function ApplicationModal({ isOpen, onClose, initialRole }) {
                   </div>
                   <div className="form-group">
                     <label htmlFor="role">Job Role <span className="required">*</span></label>
-                    <select id="role" name="role" value={formData.role} onChange={handleInputChange} disabled={submitState === 'submitting'}>
-                      <option value="" disabled>--Job Role--</option>
-                      {AVAILABLE_ROLES.map(r => (
-                        <option key={r} value={r}>{r}</option>
-                      ))}
-                    </select>
-                    {errors.role && <span className="error-msg">{errors.role}</span>}
+                    <input type="text" id="role" name="role" value={formData.role} disabled style={{ backgroundColor: '#f1f5f9', color: '#64748b', cursor: 'not-allowed', padding: '12px', borderRadius: '8px', border: '1px solid var(--border-color)', width: '100%', boxSizing: 'border-box' }} />
                   </div>
                 </div>
 

@@ -392,7 +392,24 @@
       "status": "Published"
     }
   ],
-  "applications": [],
+  "applications": [
+    {
+      "name": "Paritala Venkata vaibhav",
+      "phone": "8985505293",
+      "email": "venkatavaibhavparitala@gmail.com",
+      "role": "Azure Data Engineer",
+      "experience": "5",
+      "location": "Hyderabad",
+      "currentCTC": "ws",
+      "expectedCTC": "de",
+      "noticePeriod": "5",
+      "message": "m;knbjvkhcgfh",
+      "dateApplied": "2026-10-05T14:29:31.424Z",
+      "status": "New",
+      "resumeName": "Company..docx",
+      "id": 1
+    }
+  ],
   "recruiters": [],
   "interviews": [],
   "websiteSettings": {

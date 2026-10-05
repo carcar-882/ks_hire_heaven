@@ -45,6 +45,7 @@ export default function Careers() {
   const [activeExperience, setActiveExperience] = useState('All Experience');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedRole, setSelectedRole] = useState('');
+  const [selectedJobId, setSelectedJobId] = useState('');
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -115,8 +116,9 @@ export default function Careers() {
     });
   }, [searchQuery, activeCategory, activeExperience, jobs]);
 
-  const handleApply = (jobTitle) => {
+  const handleApply = (jobTitle, jobId) => {
     setSelectedRole(jobTitle);
+    setSelectedJobId(jobId);
     setIsModalOpen(true);
   };
 
@@ -334,7 +336,7 @@ export default function Careers() {
                         )}
                       </div>
                     </details>
-                    <button className="btn-primary apply-btn" onClick={() => handleApply(job.title)}>
+                    <button className="btn-primary apply-btn" onClick={() => handleApply(job.title, job.id)}>
                       Apply Now
                     </button>
                   </div>
@@ -385,6 +387,7 @@ export default function Careers() {
         isOpen={isModalOpen} 
         onClose={() => setIsModalOpen(false)} 
         initialRole={selectedRole} 
+        jobId={selectedJobId}
       />
     </div>
   );
