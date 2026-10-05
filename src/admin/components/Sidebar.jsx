@@ -12,8 +12,10 @@ import {
   Settings,
   LogOut
 } from 'lucide-react';
+import { useAdmin } from '../context/AdminContext';
 
 const Sidebar = () => {
+  const { logout } = useAdmin();
   return (
     <aside className="admin-sidebar">
       <div className="admin-sidebar-header">
@@ -72,7 +74,7 @@ const Sidebar = () => {
             <div style={{fontSize: '0.75rem', color: 'var(--text-muted)'}}>Super Admin</div>
           </div>
         </div>
-        <button className="icon-btn" title="Logout">
+        <button className="icon-btn" title="Logout" onClick={logout}>
           <LogOut size={18} />
         </button>
       </div>

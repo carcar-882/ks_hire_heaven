@@ -5,6 +5,9 @@ const AdminContext = createContext();
 export const useAdmin = () => useContext(AdminContext);
 
 export const AdminProvider = ({ children }) => {
+  const [isAuthenticated, setIsAuthenticated] = useState(() => {
+    return localStorage.getItem('hireheaven_admin_auth') === 'true';
+  });
   const [applications, setApplications] = useState([]);
   const [jobs, setJobs] = useState([]);
   const [recruiters, setRecruiters] = useState([]);
@@ -39,8 +42,20 @@ export const AdminProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    fetchData();
-  }, []);
+    if (isAuthenticated) {
+      fetchData();
+    }
+  }, [isAuthenticated]);
+
+  const login = () => {
+    localStorage.setItem('hireheaven_admin_auth', 'true');
+    setIsAuthenticated(true);
+  };
+
+  const logout = () => {
+    localStorage.removeItem('hireheaven_admin_auth');
+    setIsAuthenticated(false);
+  };
 
   const kpis = [
     { label: 'Total Applications', value: applications.length.toString(), trend: '+5%', trendType: 'positive', icon: 'Users' },
@@ -67,15 +82,35 @@ export const AdminProvider = ({ children }) => {
     }
   };
 
+  const addJob = async (job) => {
+    try {
+      const res = await fetch(`${API_URL}/jobs`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(job)
+      });
+      if (res.ok) {
+        const newJob = await res.json();
+        setJobs(prev => [...prev, newJob]);
+      }
+    } catch(err) {
+      console.error("Failed to add job", err);
+    }
+  };
+
   return (
     <AdminContext.Provider value={{
+      isAuthenticated,
+      login,
+      logout,
       applications,
       jobs,
       recruiters,
       kpis,
       loading,
       error,
-      updateApplicationStatus
+      updateApplicationStatus,
+      addJob
     }}>
       {children}
     </AdminContext.Provider>
