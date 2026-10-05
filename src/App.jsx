@@ -7,6 +7,10 @@ import Login from './admin/pages/Login';
 import Dashboard from './admin/pages/Dashboard';
 import JobApplications from './admin/pages/JobApplications';
 import Jobs from './admin/pages/Jobs';
+import Recruiters from './admin/pages/Recruiters';
+import Interviews from './admin/pages/Interviews';
+import Analytics from './admin/pages/Analytics';
+import Settings from './admin/pages/Settings';
 import Placeholder from './admin/pages/Placeholder';
 import { AdminProvider } from './admin/context/AdminContext';
 
@@ -82,10 +86,10 @@ export default function App() {
         <Route path="shortlisted" element={<Placeholder title="Shortlisted" />} />
         <Route path="rejected" element={<Placeholder title="Rejected" />} />
         <Route path="jobs" element={<Jobs />} />
-        <Route path="interviews" element={<Placeholder title="Interviews" />} />
-        <Route path="recruiters" element={<Placeholder title="Recruiters" />} />
-        <Route path="analytics" element={<Placeholder title="Analytics" />} />
-        <Route path="settings" element={<Placeholder title="Settings" />} />
+        <Route path="interviews" element={<Interviews />} />
+        <Route path="recruiters" element={<Recruiters />} />
+        <Route path="analytics" element={<Analytics />} />
+        <Route path="settings" element={<Settings />} />
       </Route>
 
       <Route path="*" element={<Navigate to="/" replace />} />

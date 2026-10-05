@@ -11,6 +11,7 @@ export const AdminProvider = ({ children }) => {
   const [applications, setApplications] = useState([]);
   const [jobs, setJobs] = useState([]);
   const [recruiters, setRecruiters] = useState([]);
+  const [interviews, setInterviews] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -19,19 +20,22 @@ export const AdminProvider = ({ children }) => {
   const fetchData = async () => {
     try {
       setLoading(true);
-      const [appsRes, jobsRes, recsRes] = await Promise.all([
+      const [appsRes, jobsRes, recsRes, intRes] = await Promise.all([
         fetch(`${API_URL}/applications`),
         fetch(`${API_URL}/jobs`),
-        fetch(`${API_URL}/recruiters`)
+        fetch(`${API_URL}/recruiters`),
+        fetch(`${API_URL}/interviews`)
       ]);
       
       const apps = await appsRes.json();
       const jbs = await jobsRes.json();
       const recs = await recsRes.json();
+      const ints = await intRes.json();
       
       setApplications(apps);
       setJobs(jbs);
       setRecruiters(recs);
+      setInterviews(ints);
       setError(null);
     } catch (err) {
       console.error("Failed to fetch data", err);
@@ -106,6 +110,7 @@ export const AdminProvider = ({ children }) => {
       applications,
       jobs,
       recruiters,
+      interviews,
       kpis,
       loading,
       error,

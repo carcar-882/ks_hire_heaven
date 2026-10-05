@@ -117,16 +117,34 @@ export default function ApplicationModal({ isOpen, onClose, initialRole }) {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validateForm()) return;
     
     setSubmitState('submitting');
     
-    // Simulate API call, then fallback since there's no backend
-    setTimeout(() => {
-      setSubmitState('fallback');
-    }, 1500);
+    try {
+      const response = await fetch('http://localhost:3001/applications', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          ...formData,
+          dateApplied: new Date().toISOString(),
+          status: 'New',
+          // Since it's a mock backend, we can't upload files easily, so we just save the name
+          resumeName: resume ? resume.name : null
+        })
+      });
+      
+      if(response.ok) {
+        setSubmitState('success');
+      } else {
+        setSubmitState('error');
+      }
+    } catch(err) {
+      console.error(err);
+      setSubmitState('error');
+    }
   };
 
   const handleOpenWhatsApp = () => {

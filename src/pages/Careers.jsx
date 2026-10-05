@@ -3,7 +3,7 @@ import { motion, useReducedMotion } from 'framer-motion';
 import HeroNavbar from '../components/HeroNavbar';
 import Footer from '../components/Footer';
 import ApplicationModal from '../components/ApplicationModal';
-import { jobs, careersEmail } from '../data/jobs';
+import { careersEmail } from '../data/jobs';
 import '../components/Hero.css';
 import '../styles/careers/careers.css';
 import {
@@ -45,6 +45,22 @@ export default function Careers() {
   const [activeExperience, setActiveExperience] = useState('All Experience');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedRole, setSelectedRole] = useState('');
+  const [jobs, setJobs] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetch('http://localhost:3001/jobs')
+      .then(res => res.json())
+      .then(data => {
+        // Only show published jobs on the public site
+        setJobs(data.filter(job => job.status === 'Published'));
+        setLoading(false);
+      })
+      .catch(err => {
+        console.error("Error fetching jobs:", err);
+        setLoading(false);
+      });
+  }, []);
 
   useEffect(() => {
     const previousTitle = document.title;
@@ -77,13 +93,13 @@ export default function Careers() {
   const filteredJobs = useMemo(() => {
     return jobs.filter((job) => {
       const matchSearch =
-        job.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        job.technologies.some(t => t.toLowerCase().includes(searchQuery.toLowerCase()));
+        job.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        (job.technologies || []).some(t => t.toLowerCase().includes(searchQuery.toLowerCase()));
 
-      const matchCategory = activeCategory === 'All Roles' || job.category === activeCategory;
+      const matchCategory = activeCategory === 'All Roles' || job.department === activeCategory;
 
       let matchExp = true;
-      if (activeExperience !== 'All Experience') {
+      if (activeExperience !== 'All Experience' && job.experience) {
         const expLower = job.experience.toLowerCase();
         if (activeExperience === '3–5 Years') matchExp = expLower.includes('3') || expLower.includes('4') || expLower.includes('5');
         else if (activeExperience === '5–8 Years') matchExp = expLower.includes('5') || expLower.includes('6') || expLower.includes('7') || expLower.includes('8');
@@ -258,15 +274,15 @@ export default function Careers() {
               filteredJobs.map((job, idx) => (
                 <Reveal key={job.id} delay={idx * 0.05} className="job-card">
                   <div className="jc-header">
-                    <span className="jc-category">{job.category}</span>
+                    <span className="jc-category">{job.department}</span>
                     {job.badge && <span className="jc-badge">{job.badge}</span>}
                   </div>
                   <h3 className="jc-title">{job.title}</h3>
                   
                   <div className="jc-meta">
-                    <span className="jc-meta-item"><Briefcase size={16} /> {job.experience}</span>
-                    <span className="jc-meta-item"><LineChart size={16} /> {job.package}</span>
-                    <span className="jc-meta-item"><MapPin size={16} /> {job.location}</span>
+                    <span className="jc-meta-item"><Briefcase size={16} /> {job.experience || 'Not specified'}</span>
+                    <span className="jc-meta-item"><LineChart size={16} /> {job.salary || 'Competitive'}</span>
+                    <span className="jc-meta-item"><MapPin size={16} /> {job.location || 'Remote'}</span>
                   </div>
                   
                   {job.project && (
@@ -275,10 +291,10 @@ export default function Careers() {
                     </div>
                   )}
 
-                  <p className="jc-desc">{job.shortDescription}</p>
+                  <p className="jc-desc">{job.description || job.shortDescription}</p>
 
                   <div className="jc-tags">
-                    {job.technologies.map(tech => (
+                    {(job.technologies || []).map(tech => (
                       <span key={tech} className="jc-tag">{tech}</span>
                     ))}
                   </div>
@@ -289,13 +305,13 @@ export default function Careers() {
                       <div className="jc-details-content">
                         <h4>Responsibilities</h4>
                         <ul>
-                          {job.responsibilities.map((r, i) => <li key={i}>{r}</li>)}
+                          {(job.responsibilities || []).map((r, i) => <li key={i}>{r}</li>)}
                         </ul>
                         <h4>Required Skills</h4>
                         <div className="skill-tags">
-                          {job.requiredSkills.map(s => <span key={s} className="skill-tag">{s}</span>)}
+                          {(job.requiredSkills || []).map(s => <span key={s} className="skill-tag">{s}</span>)}
                         </div>
-                        {job.preferredSkills.length > 0 && (
+                        {job.preferredSkills && job.preferredSkills.length > 0 && (
                           <>
                             <h4>Preferred Skills</h4>
                             <div className="skill-tags">
