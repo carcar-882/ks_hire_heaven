@@ -101,7 +101,33 @@ export const AdminProvider = ({ children }) => {
       console.error("Failed to add job", err);
     }
   };
+  const updateJob = async (id, updatedJob) => {
+    try {
+      const res = await fetch(`${API_URL}/jobs/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updatedJob)
+      });
+      if (res.ok) {
+        setJobs(prev => prev.map(job => job.id === id ? updatedJob : job));
+      }
+    } catch(err) {
+      console.error("Failed to update job", err);
+    }
+  };
 
+  const deleteJob = async (id) => {
+    try {
+      const res = await fetch(`${API_URL}/jobs/${id}`, {
+        method: 'DELETE'
+      });
+      if (res.ok) {
+        setJobs(prev => prev.filter(job => job.id !== id));
+      }
+    } catch(err) {
+      console.error("Failed to delete job", err);
+    }
+  };
   return (
     <AdminContext.Provider value={{
       isAuthenticated,
@@ -115,7 +141,9 @@ export const AdminProvider = ({ children }) => {
       loading,
       error,
       updateApplicationStatus,
-      addJob
+      addJob,
+      updateJob,
+      deleteJob
     }}>
       {children}
     </AdminContext.Provider>

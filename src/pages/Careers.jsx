@@ -295,8 +295,8 @@ export default function Careers() {
                   <h3 className="jc-title">{job.title}</h3>
                   
                   <div className="jc-meta">
-                    <span className="jc-meta-item"><Briefcase size={16} /> {job.experience || 'Not specified'}</span>
-                    <span className="jc-meta-item"><LineChart size={16} /> {job.salary || job.package || 'Competitive'}</span>
+                    <span className="jc-meta-item"><Briefcase size={16} /> {job.employment_type || 'Full Time'}</span>
+                    <span className="jc-meta-item"><LineChart size={16} /> {job.salary_min ? `${job.salary_currency === 'INR' ? '₹' : job.salary_currency}${job.salary_min}–${job.salary_max} ${job.salary_period}` : 'Competitive'}</span>
                     <span className="jc-meta-item"><MapPin size={16} /> {job.location || 'Remote'}</span>
                   </div>
                   
@@ -309,7 +309,7 @@ export default function Careers() {
                   <p className="jc-desc">{job.description || job.shortDescription}</p>
 
                   <div className="jc-tags">
-                    {(job.technologies || []).map(tech => (
+                    {(job.required_skills || []).map(tech => (
                       <span key={tech} className="jc-tag">{tech}</span>
                     ))}
                   </div>
@@ -319,21 +319,13 @@ export default function Careers() {
                       <summary className="btn-outline">View Job Description</summary>
                       <div className="jc-details-content">
                         <h4>Responsibilities</h4>
-                        <ul>
-                          {(job.responsibilities || []).map((r, i) => <li key={i}>{r}</li>)}
+                        <ul style={{paddingLeft: '20px', marginBottom: '16px'}}>
+                          {(job.responsibilities || []).map((r, i) => <li key={i} style={{marginBottom: '4px'}}>{r}</li>)}
                         </ul>
                         <h4>Required Skills</h4>
                         <div className="skill-tags">
-                          {(job.requiredSkills || []).map(s => <span key={s} className="skill-tag">{s}</span>)}
+                          {(job.required_skills || []).map(s => <span key={s} className="skill-tag">{s}</span>)}
                         </div>
-                        {job.preferredSkills && job.preferredSkills.length > 0 && (
-                          <>
-                            <h4>Preferred Skills</h4>
-                            <div className="skill-tags">
-                              {job.preferredSkills.map(s => <span key={s} className="skill-tag preferred">{s}</span>)}
-                            </div>
-                          </>
-                        )}
                       </div>
                     </details>
                     <button className="btn-primary apply-btn" onClick={() => handleApply(job.title, job.id)}>
