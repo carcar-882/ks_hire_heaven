@@ -1,0 +1,64 @@
+{
+  "jobs": [
+    {
+      "id": 1,
+      "job_id": "JOB-1001",
+      "title": "Senior Frontend Developer",
+      "department": "Engineering",
+      "location": "Bangalore (Hybrid)",
+      "employment_type": "Full-time",
+      "experience": "5-8 Years",
+      "salary": "₹15,00,000 - ₹25,00,000",
+      "description": "Looking for an expert React developer.",
+      "status": "Published"
+    },
+    {
+      "id": 2,
+      "job_id": "JOB-1002",
+      "title": "Product Manager",
+      "department": "Product",
+      "location": "Remote",
+      "employment_type": "Full-time",
+      "experience": "3-5 Years",
+      "salary": "₹12,00,000 - ₹18,00,000",
+      "description": "Drive product vision and execution.",
+      "status": "Published"
+    }
+  ],
+  "applications": [
+    { "id": 1, "name": "Rahul Kumar", "email": "rahul.k@example.com", "phone": "+91 9876543210", "jobId": 1, "jobTitle": "Senior Frontend Developer", "experience": "6 Years", "location": "Bangalore", "appliedDate": "2026-10-05T10:00:00Z", "status": "New", "recruiter": "Priya Sharma" },
+    { "id": 2, "name": "Anjali Singh", "email": "anjali.s@example.com", "phone": "+91 9876543211", "jobId": 2, "jobTitle": "Product Manager", "experience": "4 Years", "location": "Mumbai", "appliedDate": "2026-10-04T10:00:00Z", "status": "Under Review", "recruiter": "David Thomas" },
+    { "id": 3, "name": "Vikram Desai", "email": "vikram.d@example.com", "phone": "+91 9876543212", "jobId": 1, "jobTitle": "Senior Frontend Developer", "experience": "8 Years", "location": "Pune", "appliedDate": "2026-10-03T10:00:00Z", "status": "Shortlisted", "recruiter": "Priya Sharma" },
+    { "id": 4, "name": "Neha Gupta", "email": "neha.g@example.com", "phone": "+91 9876543213", "jobId": 2, "jobTitle": "Product Manager", "experience": "3 Years", "location": "Delhi", "appliedDate": "2026-10-02T10:00:00Z", "status": "Interview Scheduled", "recruiter": "David Thomas" },
+    { "id": 5, "name": "Arjun Patel", "email": "arjun.p@example.com", "phone": "+91 9876543214", "jobId": 1, "jobTitle": "Senior Frontend Developer", "experience": "5 Years", "location": "Ahmedabad", "appliedDate": "2026-10-01T10:00:00Z", "status": "Rejected", "recruiter": "Priya Sharma" },
+    { "id": 6, "name": "Pooja Reddy", "email": "pooja.r@example.com", "phone": "+91 9876543215", "jobId": 1, "jobTitle": "Senior Frontend Developer", "experience": "7 Years", "location": "Hyderabad", "appliedDate": "2026-09-30T10:00:00Z", "status": "Selected", "recruiter": "David Thomas" },
+    { "id": 7, "name": "Karan Malhotra", "email": "karan.m@example.com", "phone": "+91 9876543216", "jobId": 2, "jobTitle": "Product Manager", "experience": "5 Years", "location": "Gurgaon", "appliedDate": "2026-09-29T10:00:00Z", "status": "New", "recruiter": "Priya Sharma" },
+    { "id": 8, "name": "Sneha Joshi", "email": "sneha.j@example.com", "phone": "+91 9876543217", "jobId": 1, "jobTitle": "Senior Frontend Developer", "experience": "6 Years", "location": "Chennai", "appliedDate": "2026-09-28T10:00:00Z", "status": "Under Review", "recruiter": "Rahul Singh" },
+    { "id": 9, "name": "Aditya Verma", "email": "aditya.v@example.com", "phone": "+91 9876543218", "jobId": 2, "jobTitle": "Product Manager", "experience": "4 Years", "location": "Noida", "appliedDate": "2026-09-27T10:00:00Z", "status": "Shortlisted", "recruiter": "Anjali Kumar" },
+    { "id": 10, "name": "Riya Kapoor", "email": "riya.k@example.com", "phone": "+91 9876543219", "jobId": 1, "jobTitle": "Senior Frontend Developer", "experience": "5 Years", "location": "Kolkata", "appliedDate": "2026-09-26T10:00:00Z", "status": "Interview Scheduled", "recruiter": "Rahul Singh" },
+    { "id": 11, "name": "Rohan Das", "email": "rohan.d@example.com", "phone": "+91 9876543220", "jobId": 2, "jobTitle": "Product Manager", "experience": "6 Years", "location": "Chandigarh", "appliedDate": "2026-09-25T10:00:00Z", "status": "Rejected", "recruiter": "Anjali Kumar" },
+    { "id": 12, "name": "Meera Nair", "email": "meera.n@example.com", "phone": "+91 9876543221", "jobId": 1, "jobTitle": "Senior Frontend Developer", "experience": "7 Years", "location": "Kochi", "appliedDate": "2026-09-24T10:00:00Z", "status": "Selected", "recruiter": "Rahul Singh" },
+    { "id": 13, "name": "Siddharth Rao", "email": "siddharth.r@example.com", "phone": "+91 9876543222", "jobId": 2, "jobTitle": "Product Manager", "experience": "3 Years", "location": "Mysore", "appliedDate": "2026-09-23T10:00:00Z", "status": "New", "recruiter": "Anjali Kumar" },
+    { "id": 14, "name": "Shruti Menon", "email": "shruti.m@example.com", "phone": "+91 9876543223", "jobId": 1, "jobTitle": "Senior Frontend Developer", "experience": "8 Years", "location": "Trivandrum", "appliedDate": "2026-09-22T10:00:00Z", "status": "Under Review", "recruiter": "Priya Sharma" },
+    { "id": 15, "name": "Akash Pandey", "email": "akash.p@example.com", "phone": "+91 9876543224", "jobId": 2, "jobTitle": "Product Manager", "experience": "4 Years", "location": "Lucknow", "appliedDate": "2026-09-21T10:00:00Z", "status": "Shortlisted", "recruiter": "David Thomas" },
+    { "id": 16, "name": "Nidhi Shah", "email": "nidhi.s@example.com", "phone": "+91 9876543225", "jobId": 1, "jobTitle": "Senior Frontend Developer", "experience": "5 Years", "location": "Surat", "appliedDate": "2026-09-20T10:00:00Z", "status": "Interview Scheduled", "recruiter": "Priya Sharma" },
+    { "id": 17, "name": "Gaurav Bhatt", "email": "gaurav.b@example.com", "phone": "+91 9876543226", "jobId": 2, "jobTitle": "Product Manager", "experience": "6 Years", "location": "Dehradun", "appliedDate": "2026-09-19T10:00:00Z", "status": "Rejected", "recruiter": "David Thomas" },
+    { "id": 18, "name": "Kavita Tiwari", "email": "kavita.t@example.com", "phone": "+91 9876543227", "jobId": 1, "jobTitle": "Senior Frontend Developer", "experience": "7 Years", "location": "Indore", "appliedDate": "2026-09-18T10:00:00Z", "status": "Selected", "recruiter": "Rahul Singh" },
+    { "id": 19, "name": "Amit Choudhary", "email": "amit.c@example.com", "phone": "+91 9876543228", "jobId": 2, "jobTitle": "Product Manager", "experience": "5 Years", "location": "Bhopal", "appliedDate": "2026-09-17T10:00:00Z", "status": "New", "recruiter": "Anjali Kumar" },
+    { "id": 20, "name": "Divya Sharma", "email": "divya.s@example.com", "phone": "+91 9876543229", "jobId": 1, "jobTitle": "Senior Frontend Developer", "experience": "8 Years", "location": "Jaipur", "appliedDate": "2026-09-16T10:00:00Z", "status": "Under Review", "recruiter": "Rahul Singh" }
+  ],
+  "recruiters": [
+    { "id": 1, "name": "Priya Sharma", "email": "priya.s@hireheaven.com", "designation": "Senior Recruiter", "status": "Active" },
+    { "id": 2, "name": "David Thomas", "email": "david.t@hireheaven.com", "designation": "Recruiter", "status": "Active" },
+    { "id": 3, "name": "Rahul Singh", "email": "rahul.s@hireheaven.com", "designation": "Talent Acquisition Lead", "status": "Active" },
+    { "id": 4, "name": "Anjali Kumar", "email": "anjali.k@hireheaven.com", "designation": "Recruiter", "status": "Active" }
+  ],
+  "websiteSettings": {
+    "company_name": "KS Hire Heaven Software India Pvt Ltd",
+    "phone": "+91 800-HIRE-HEAVEN",
+    "email": "contact@hireheaven.com",
+    "address": "Tech Park, Bangalore, India",
+    "linkedin": "https://linkedin.com/company/hireheaven",
+    "instagram": "https://instagram.com/hireheaven"
+  }
+}
