@@ -47,19 +47,30 @@ export default function Careers() {
   const [selectedRole, setSelectedRole] = useState('');
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  useEffect(() => {
+  const fetchJobs = () => {
+    setLoading(true);
+    setError(null);
     fetch('http://localhost:3001/jobs')
-      .then(res => res.json())
+      .then(res => {
+        if (!res.ok) throw new Error("Failed to fetch jobs");
+        return res.json();
+      })
       .then(data => {
-        // Only show published jobs on the public site
-        setJobs(data.filter(job => job.status === 'Published'));
+        // Only show published jobs and non-archived jobs
+        setJobs(data.filter(job => job.status === 'Published' && !job.archived_at));
         setLoading(false);
       })
       .catch(err => {
         console.error("Error fetching jobs:", err);
+        setError("Unable to load jobs. Please try again.");
         setLoading(false);
       });
+  };
+
+  useEffect(() => {
+    fetchJobs();
   }, []);
 
   useEffect(() => {
@@ -69,18 +80,11 @@ export default function Careers() {
     return () => { document.title = previousTitle; };
   }, []);
 
-  const categories = [
-    'All Roles',
-    'Azure Architecture',
-    'Azure Cloud',
-    'Azure Networking',
-    'Azure DevOps',
-    'Azure Data',
-    'Scrum / Agile',
-    'Power BI',
-    'Business Analysis',
-    'HR & Recruitment'
-  ];
+  // Derive categories dynamically from the actual published jobs
+  const categories = useMemo(() => {
+    const deps = jobs.map(j => j.department).filter(Boolean);
+    return ['All Roles', ...new Set(deps)];
+  }, [jobs]);
 
   const experienceLevels = [
     'All Experience',
@@ -270,7 +274,16 @@ export default function Careers() {
           </div>
 
           <div className="jobs-grid">
-            {filteredJobs.length > 0 ? (
+            {loading ? (
+              <div style={{gridColumn: '1 / -1', padding: '48px', textAlign: 'center', color: 'var(--text-muted)'}}>
+                Loading open positions...
+              </div>
+            ) : error ? (
+              <div style={{gridColumn: '1 / -1', padding: '48px', textAlign: 'center', backgroundColor: '#fef2f2', borderRadius: '12px', color: '#ef4444'}}>
+                <p style={{marginBottom: '16px'}}>{error}</p>
+                <button className="btn-primary" onClick={fetchJobs}>Retry</button>
+              </div>
+            ) : filteredJobs.length > 0 ? (
               filteredJobs.map((job, idx) => (
                 <Reveal key={job.id} delay={idx * 0.05} className="job-card">
                   <div className="jc-header">
@@ -281,7 +294,7 @@ export default function Careers() {
                   
                   <div className="jc-meta">
                     <span className="jc-meta-item"><Briefcase size={16} /> {job.experience || 'Not specified'}</span>
-                    <span className="jc-meta-item"><LineChart size={16} /> {job.salary || 'Competitive'}</span>
+                    <span className="jc-meta-item"><LineChart size={16} /> {job.salary || job.package || 'Competitive'}</span>
                     <span className="jc-meta-item"><MapPin size={16} /> {job.location || 'Remote'}</span>
                   </div>
                   
@@ -329,11 +342,15 @@ export default function Careers() {
                 </Reveal>
               ))
             ) : (
-              <div className="no-jobs-found">
+              <div className="no-jobs-found" style={{gridColumn: '1 / -1'}}>
                 <p>No open positions match your current filters.</p>
-                <button className="btn-outline" onClick={() => { setSearchQuery(''); setActiveCategory('All Roles'); setActiveExperience('All Experience'); }}>
-                  Clear Filters
-                </button>
+                {jobs.length === 0 ? (
+                  <p style={{marginTop: '8px', color: 'var(--text-muted)'}}>No open positions available.</p>
+                ) : (
+                  <button className="btn-outline" onClick={() => { setSearchQuery(''); setActiveCategory('All Roles'); setActiveExperience('All Experience'); }}>
+                    Clear Filters
+                  </button>
+                )}
               </div>
             )}
           </div>
