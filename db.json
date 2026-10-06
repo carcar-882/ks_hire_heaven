@@ -41,7 +41,7 @@
         "Cloud Migration",
         "Enterprise Architecture"
       ],
-      "status": "Archived",
+      "status": "Published",
       "required_skills": [
         "Azure",
         "Azure Architecture",
@@ -57,7 +57,9 @@
         "Cloud Migration",
         "Enterprise Architecture"
       ],
-      "archived_at": "2026-10-05T15:38:16.052Z"
+      "salary_min": "7",
+      "salary_max": "14",
+      "updated_at": "2026-10-05T15:59:49.232Z"
     },
     {
       "id": 2,
@@ -97,7 +99,7 @@
         "Hybrid Cloud",
         "Enterprise Cloud Architecture"
       ],
-      "status": "Archived",
+      "status": "Draft",
       "required_skills": [
         "10+ years IT experience",
         "Azure Architecture",
@@ -112,8 +114,7 @@
         "Disaster Recovery",
         "Hybrid Cloud",
         "Enterprise Cloud Architecture"
-      ],
-      "archived_at": "2026-10-05T15:38:15.211Z"
+      ]
     },
     {
       "id": 3,
@@ -158,7 +159,7 @@
         "Hybrid Networking",
         "Network Security"
       ],
-      "status": "Archived",
+      "status": "Draft",
       "required_skills": [
         "4+ years relevant experience",
         "Azure Networking",
@@ -174,8 +175,7 @@
         "Routing",
         "Hybrid Networking",
         "Network Security"
-      ],
-      "archived_at": "2026-10-05T15:38:13.595Z"
+      ]
     },
     {
       "id": 4,
@@ -212,7 +212,20 @@
         "Azure CLI",
         "Cloud Infrastructure"
       ],
-      "status": "Published"
+      "status": "Draft",
+      "required_skills": [
+        "4+ years experience",
+        "Azure",
+        "Azure VMs",
+        "Azure Storage",
+        "Azure Migrate",
+        "ASR",
+        "Azure Monitor",
+        "Azure Backup",
+        "PowerShell",
+        "Azure CLI",
+        "Cloud Infrastructure"
+      ]
     },
     {
       "id": 5,
