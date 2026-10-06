@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { ArrowRight, ChevronDown, Menu, Search, X } from 'lucide-react';
 import DropdownMenu from './DropdownMenu';
+import brandLogo from '../assets/logo.jpg';
 
 const contactHref = 'mailto:?subject=Cloud%20solutions%20enquiry%20-%20KS%20Hire%20Heaven';
 
@@ -95,11 +96,7 @@ export default function Navbar() {
       onKeyDown={(event) => event.key === 'Escape' && closeMenus()}
     >
       <a className="brand" href="#home" aria-label="KS Hire Heaven home" onClick={closeMenus}>
-        <div className="brand-mark">KS</div>
-        <div className="brand-text">
-          <span className="brand-text-top">HIRE HEAVEN</span>
-          <span className="brand-text-bottom">SOFTWARE INDIA PVT LTD</span>
-        </div>
+        <img src={brandLogo} alt="KS Hire Heaven" className="brand-logo" />
       </a>
 
       <nav className="main-nav" aria-label="Main menu">

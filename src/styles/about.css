@@ -136,6 +136,12 @@ svg {
   text-decoration: none;
 }
 
+.brand-logo {
+  height: 48px;
+  width: auto;
+  object-fit: contain;
+}
+
 .brand-mark {
   width: 48px;
   height: 48px;
