@@ -13,14 +13,16 @@ import {
   LogOut
 } from 'lucide-react';
 import { useAdmin } from '../context/AdminContext';
-import brandLogo from '../../assets/logo.jpg';
+import brandLogo from '../../assets/logo.png';
 
 const Sidebar = () => {
   const { logout } = useAdmin();
   return (
     <aside className="admin-sidebar">
       <div className="admin-sidebar-header">
-        <img src={brandLogo} alt="KS Hire Heaven" className="admin-sidebar-logo" />
+        <NavLink to="/admin/dashboard" style={{ display: 'block' }}>
+          <img src={brandLogo} alt="KS Hire Heaven" className="admin-sidebar-logo" />
+        </NavLink>
       </div>
       
       <div className="admin-nav">

@@ -1,6 +1,6 @@
 import { useReducedMotion, motion } from 'framer-motion';
 import { ArrowRight, ArrowUpRight, AtSign, Linkedin, Mail, MessageCircle, Phone, Youtube } from 'lucide-react';
-import brandLogo from '../assets/logo.jpg';
+import brandLogo from '../assets/logo.png';
 import { contact, company } from './about/aboutData';
 import './Footer.css';
 

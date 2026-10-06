@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAdmin } from '../context/AdminContext';
+import brandLogo from '../../assets/logo.png';
 import '../styles/admin.css';
 
 const Login = () => {
@@ -48,7 +49,8 @@ const Login = () => {
         backgroundColor: 'var(--bg-color)'
       }}>
         <div className="admin-card" style={{width: '400px', padding: '40px', textAlign: 'center'}}>
-          <h2 style={{fontFamily: 'var(--font-heading)', color: 'var(--deep-purple)', marginBottom: '8px'}}>Reset Password</h2>
+          <img src={brandLogo} alt="KS Hire Heaven Software India Pvt Ltd" style={{height: '60px', width: 'auto', marginBottom: '16px', objectFit: 'contain'}} />
+          <h2 style={{fontFamily: 'var(--font-heading)', color: 'var(--deep-purple)', marginBottom: '8px', fontSize: '1.25rem'}}>Reset Password</h2>
           <p style={{color: 'var(--text-muted)', marginBottom: '32px'}}>Enter your email to receive reset instructions</p>
           
           {resetSuccess ? (
@@ -91,7 +93,7 @@ const Login = () => {
       backgroundColor: 'var(--bg-color)'
     }}>
       <div className="admin-card" style={{width: '400px', padding: '40px', textAlign: 'center'}}>
-        <h2 style={{fontFamily: 'var(--font-heading)', color: 'var(--deep-purple)', marginBottom: '8px'}}>HIRE HEAVEN</h2>
+        <img src={brandLogo} alt="KS Hire Heaven Software India Pvt Ltd" style={{height: '60px', width: 'auto', marginBottom: '16px', objectFit: 'contain'}} />
         <p style={{color: 'var(--text-muted)', marginBottom: '32px'}}>Sign in to your admin account</p>
         
         <form onSubmit={handleLogin} style={{display: 'flex', flexDirection: 'column', gap: '16px'}}>

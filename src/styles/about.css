@@ -871,6 +871,13 @@ svg {
   z-index: 1;
 }
 
+.core-brand-img {
+  width: 120px;
+  height: auto;
+  max-height: 90px;
+  object-fit: contain;
+}
+
 .core-mark {
   font-size: 92px;
   line-height: 0.75;

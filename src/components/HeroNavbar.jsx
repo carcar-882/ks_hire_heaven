@@ -3,7 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import { ArrowRight, ChevronDown, Menu, Search, X } from 'lucide-react';
 import DropdownMenu from './DropdownMenu';
-import brandLogo from '../assets/logo.jpg';
+import brandLogo from '../assets/logo.png';
 
 const contactHref = 'mailto:?subject=Cloud%20solutions%20enquiry%20-%20KS%20Hire%20Heaven';
 

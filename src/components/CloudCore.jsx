@@ -1,5 +1,5 @@
 import { motion, useReducedMotion } from 'framer-motion';
-
+import brandLogo from '../assets/logo.png';
 export default function CloudCore() {
   const reduceMotion = useReducedMotion();
 
@@ -18,9 +18,7 @@ export default function CloudCore() {
         <div className="core-cloud-layer layer-three" aria-hidden="true" />
 
         <div className="core-logo">
-          <span className="core-mark">KS</span>
-          <span className="core-caption">HIRE HEAVEN</span>
-          <span className="core-subcaption">SOFTWARE INDIA PVT LTD</span>
+          <img src={brandLogo} alt="KS Hire Heaven Software India Pvt Ltd" className="core-brand-img" />
         </div>
       </div>
     </motion.div>
