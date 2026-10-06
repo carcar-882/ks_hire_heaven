@@ -15,7 +15,7 @@ export const AdminProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const API_URL = 'http://localhost:3001';
+  const API_URL = '/api';
 
   // Normalize API data to guarantee array fields exist and prevent .map() crashes
   const normalizeJob = (job) => ({

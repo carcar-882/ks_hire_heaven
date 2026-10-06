@@ -53,7 +53,7 @@ export default function Careers() {
   const fetchJobs = () => {
     setLoading(true);
     setError(null);
-    fetch('http://localhost:3001/jobs')
+    fetch('/api/jobs')
       .then(res => {
         if (!res.ok) throw new Error("Failed to fetch jobs");
         return res.json();

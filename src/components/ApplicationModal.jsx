@@ -111,7 +111,7 @@ export default function ApplicationModal({ isOpen, onClose, initialRole, jobId }
     setSubmitState('submitting');
     
     try {
-      const response = await fetch('http://localhost:3001/applications', {
+      const response = await fetch('/api/applications', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
