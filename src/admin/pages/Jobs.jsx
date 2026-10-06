@@ -27,23 +27,26 @@ const Jobs = () => {
   
   // Handlers for form arrays
   const handleArrayChange = (field, index, value) => {
-    const newArray = [...currentJob[field]];
+    const newArray = Array.isArray(currentJob[field]) ? [...currentJob[field]] : [];
     newArray[index] = value;
     setCurrentJob({ ...currentJob, [field]: newArray });
   };
   
   const addArrayItem = (field) => {
-    setCurrentJob({ ...currentJob, [field]: [...currentJob[field], ''] });
+    const currentArray = Array.isArray(currentJob[field]) ? currentJob[field] : [];
+    setCurrentJob({ ...currentJob, [field]: [...currentArray, ''] });
   };
 
   const removeArrayItem = (field, index) => {
-    const newArray = currentJob[field].filter((_, i) => i !== index);
+    const currentArray = Array.isArray(currentJob[field]) ? currentJob[field] : [];
+    const newArray = currentArray.filter((_, i) => i !== index);
     setCurrentJob({ ...currentJob, [field]: newArray });
   };
 
   const moveArrayItem = (field, index, dir) => {
-    if ((dir === -1 && index === 0) || (dir === 1 && index === currentJob[field].length - 1)) return;
-    const newArray = [...currentJob[field]];
+    const currentArray = Array.isArray(currentJob[field]) ? currentJob[field] : [];
+    if ((dir === -1 && index === 0) || (dir === 1 && index === currentArray.length - 1)) return;
+    const newArray = [...currentArray];
     const temp = newArray[index];
     newArray[index] = newArray[index + dir];
     newArray[index + dir] = temp;
@@ -61,8 +64,12 @@ const Jobs = () => {
     }
     
     // Clean arrays
-    const cleanResponsibilities = currentJob.responsibilities.filter(r => r.trim() !== '');
-    const cleanSkills = currentJob.required_skills.filter(s => s.trim() !== '');
+    const cleanResponsibilities = Array.isArray(currentJob.responsibilities) 
+      ? currentJob.responsibilities.filter(r => typeof r === 'string' && r.trim() !== '') 
+      : [];
+    const cleanSkills = Array.isArray(currentJob.required_skills) 
+      ? currentJob.required_skills.filter(s => typeof s === 'string' && s.trim() !== '') 
+      : [];
     
     if (cleanResponsibilities.length === 0) {
       alert("At least one responsibility is required!");
@@ -145,7 +152,7 @@ const Jobs = () => {
           
           <div style={{marginBottom: '24px'}}>
             <label style={{display: 'block', marginBottom: '8px', fontWeight: 600}}>2. Responsibilities *</label>
-            {(currentJob.responsibilities || []).map((resp, idx) => (
+            {(Array.isArray(currentJob.responsibilities) ? currentJob.responsibilities : []).map((resp, idx) => (
               <div key={idx} style={{display: 'flex', gap: '8px', marginBottom: '8px'}}>
                 <input type="text" value={resp} onChange={(e) => handleArrayChange('responsibilities', idx, e.target.value)} placeholder="e.g. Design enterprise-grade Azure cloud architecture." style={{flex: 1, padding: '10px', borderRadius: '8px', border: '1px solid var(--border-color)'}} />
                 <button type="button" onClick={() => moveArrayItem('responsibilities', idx, -1)} className="btn-secondary" style={{padding: '0 12px'}}>↑</button>
@@ -184,7 +191,7 @@ const Jobs = () => {
 
           <div style={{marginBottom: '24px'}}>
             <label style={{display: 'block', marginBottom: '8px', fontWeight: 600}}>5. Required Skills *</label>
-            {(currentJob.required_skills || []).map((skill, idx) => (
+            {(Array.isArray(currentJob.required_skills) ? currentJob.required_skills : []).map((skill, idx) => (
               <div key={idx} style={{display: 'flex', gap: '8px', marginBottom: '8px'}}>
                 <input type="text" value={skill} onChange={(e) => handleArrayChange('required_skills', idx, e.target.value)} placeholder="e.g. Azure Architecture" style={{flex: 1, padding: '10px', borderRadius: '8px', border: '1px solid var(--border-color)'}} />
                 <button type="button" onClick={() => removeArrayItem('required_skills', idx)} className="btn-secondary" style={{padding: '0 12px', color: 'var(--danger)'}}><Trash2 size={16} /></button>
@@ -245,12 +252,12 @@ const Jobs = () => {
         <div className="admin-card" style={{padding: '32px'}}>
           <h3 style={{borderBottom: '1px solid var(--border-color)', paddingBottom: '8px', marginBottom: '16px'}}>Responsibilities</h3>
           <ul style={{marginBottom: '32px', paddingLeft: '20px'}}>
-            {(currentJob.responsibilities || []).map((r, i) => <li key={i} style={{marginBottom: '8px'}}>{r}</li>)}
+            {(Array.isArray(currentJob.responsibilities) ? currentJob.responsibilities : []).map((r, i) => <li key={i} style={{marginBottom: '8px'}}>{r}</li>)}
           </ul>
 
           <h3 style={{borderBottom: '1px solid var(--border-color)', paddingBottom: '8px', marginBottom: '16px'}}>Required Skills</h3>
           <div style={{display: 'flex', flexWrap: 'wrap', gap: '8px', marginBottom: '32px'}}>
-            {(currentJob.required_skills || []).map((s, i) => (
+            {(Array.isArray(currentJob.required_skills) ? currentJob.required_skills : []).map((s, i) => (
               <span key={i} style={{backgroundColor: 'var(--bg-color)', border: '1px solid var(--border-color)', padding: '4px 12px', borderRadius: '16px', fontSize: '0.875rem'}}>
                 {s}
               </span>

@@ -30,7 +30,7 @@ const Reveal = ({ children, className = '', delay = 0 }) => {
       className={className}
       initial={{ opacity: 0, y: reduceMotion ? 0 : 20 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: '-50px' }}
+      viewport={{ once: true, margin: '0px' }}
       transition={{ duration: 0.5, delay, ease: 'easeOut' }}
     >
       {children}
@@ -60,7 +60,8 @@ export default function Careers() {
       })
       .then(data => {
         // Only show published jobs and non-archived jobs
-        setJobs(data.filter(job => job.status === 'Published' && !job.archived_at));
+        const jobsArray = Array.isArray(data) ? data : [];
+        setJobs(jobsArray.filter(job => job.status === 'Published' && !job.archived_at));
         setLoading(false);
       })
       .catch(err => {
@@ -83,7 +84,8 @@ export default function Careers() {
 
   // Derive categories dynamically from the actual published jobs
   const categories = useMemo(() => {
-    const deps = jobs.map(j => j.department).filter(Boolean);
+    if (!Array.isArray(jobs)) return ['All Roles'];
+    const deps = jobs.map(j => j?.department).filter(Boolean);
     return ['All Roles', ...new Set(deps)];
   }, [jobs]);
 
@@ -96,10 +98,12 @@ export default function Careers() {
   ];
 
   const filteredJobs = useMemo(() => {
+    if (!Array.isArray(jobs)) return [];
     return jobs.filter((job) => {
+      if (!job) return false;
       const matchSearch =
         job.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        (job.technologies || []).some(t => t.toLowerCase().includes(searchQuery.toLowerCase()));
+        (Array.isArray(job.technologies) ? job.technologies : []).some(t => t?.toLowerCase().includes(searchQuery.toLowerCase()));
 
       const matchCategory = activeCategory === 'All Roles' || job.department === activeCategory;
 
@@ -285,7 +289,7 @@ export default function Careers() {
                 <p style={{marginBottom: '16px'}}>{error}</p>
                 <button className="btn-primary" onClick={fetchJobs}>Retry</button>
               </div>
-            ) : filteredJobs.length > 0 ? (
+            ) : filteredJobs && filteredJobs.length > 0 ? (
               filteredJobs.map((job, idx) => (
                 <Reveal key={job.id} delay={idx * 0.05} className="job-card">
                   <div className="jc-header">
@@ -309,7 +313,7 @@ export default function Careers() {
                   <p className="jc-desc">{job.description || job.shortDescription}</p>
 
                   <div className="jc-tags">
-                    {(job.required_skills || []).map(tech => (
+                    {(Array.isArray(job.required_skills) ? job.required_skills : []).map(tech => (
                       <span key={tech} className="jc-tag">{tech}</span>
                     ))}
                   </div>
@@ -320,11 +324,11 @@ export default function Careers() {
                       <div className="jc-details-content">
                         <h4>Responsibilities</h4>
                         <ul style={{paddingLeft: '20px', marginBottom: '16px'}}>
-                          {(job.responsibilities || []).map((r, i) => <li key={i} style={{marginBottom: '4px'}}>{r}</li>)}
+                          {(Array.isArray(job.responsibilities) ? job.responsibilities : []).map((r, i) => <li key={i} style={{marginBottom: '4px'}}>{r}</li>)}
                         </ul>
                         <h4>Required Skills</h4>
                         <div className="skill-tags">
-                          {(job.required_skills || []).map(s => <span key={s} className="skill-tag">{s}</span>)}
+                          {(Array.isArray(job.required_skills) ? job.required_skills : []).map(s => <span key={s} className="skill-tag">{s}</span>)}
                         </div>
                       </div>
                     </details>
