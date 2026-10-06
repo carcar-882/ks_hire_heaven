@@ -3,7 +3,7 @@ import { motion, useReducedMotion } from 'framer-motion';
 import HeroNavbar from '../components/HeroNavbar';
 import Footer from '../components/Footer';
 import ApplicationModal from '../components/ApplicationModal';
-import { careersEmail } from '../data/jobs';
+import { careersEmail, jobs as staticJobs } from '../data/jobs';
 import '../components/Hero.css';
 import '../styles/careers/careers.css';
 import {
@@ -65,8 +65,22 @@ export default function Careers() {
         setLoading(false);
       })
       .catch(err => {
-        console.error("Error fetching jobs:", err);
-        setError("Unable to load jobs. Please try again.");
+        console.error("Error fetching jobs, falling back to static jobs:", err);
+        // Fallback to static jobs list to ensure UI remains functional
+        const formattedStaticJobs = staticJobs.map(job => ({
+          ...job,
+          job_id: job.id,
+          department: job.category || 'Engineering',
+          salary_min: job.package?.match(/\d+/)?.[0] || '',
+          salary_max: job.package?.match(/\d+–(\d+)/)?.[1] || '',
+          salary_currency: 'INR',
+          salary_period: 'LPA',
+          employment_type: 'Full Time',
+          required_skills: job.requiredSkills || [],
+          status: 'Published'
+        }));
+        setJobs(formattedStaticJobs);
+        setError(null);
         setLoading(false);
       });
   };
