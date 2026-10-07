@@ -1,4 +1,5 @@
 import { useEffect, useState, useMemo } from 'react';
+import { supabase } from '../lib/supabase';
 import { motion, useReducedMotion } from 'framer-motion';
 import HeroNavbar from '../components/HeroNavbar';
 import Footer from '../components/Footer';
@@ -50,23 +51,22 @@ export default function Careers() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const fetchJobs = () => {
+  const fetchJobs = async () => {
     setLoading(true);
     setError(null);
-    fetch('/api/jobs')
-      .then(res => {
-        if (!res.ok) throw new Error("Failed to fetch jobs");
-        return res.json();
-      })
-      .then(data => {
-        // Only show published jobs and non-archived jobs
-        const jobsArray = Array.isArray(data) ? data : [];
-        setJobs(jobsArray.filter(job => job.status === 'Published' && !job.archived_at));
-        setLoading(false);
-      })
-      .catch(err => {
-        console.error("Error fetching jobs, falling back to static jobs:", err);
-        // Fallback to static jobs list to ensure UI remains functional
+    try {
+      const { data, error: dbError } = await supabase
+        .from('jobs')
+        .select('*')
+        .eq('status', 'Published')
+        .is('archived_at', null);
+        
+      if (dbError) throw dbError;
+      
+      if (data && data.length > 0) {
+        setJobs(data);
+      } else {
+        // Fallback to static jobs if DB is empty
         const formattedStaticJobs = staticJobs.map(job => ({
           ...job,
           job_id: job.id,
@@ -80,9 +80,25 @@ export default function Careers() {
           status: 'Published'
         }));
         setJobs(formattedStaticJobs);
-        setError(null);
-        setLoading(false);
-      });
+      }
+    } catch (err) {
+      console.error("Error fetching jobs from DB, falling back:", err);
+      const formattedStaticJobs = staticJobs.map(job => ({
+        ...job,
+        job_id: job.id,
+        department: job.category || 'Engineering',
+        salary_min: job.package?.match(/\d+/)?.[0] || '',
+        salary_max: job.package?.match(/\d+–(\d+)/)?.[1] || '',
+        salary_currency: 'INR',
+        salary_period: 'LPA',
+        employment_type: 'Full Time',
+        required_skills: job.requiredSkills || [],
+        status: 'Published'
+      }));
+      setJobs(formattedStaticJobs);
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {

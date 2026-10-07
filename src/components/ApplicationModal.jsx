@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
+import { supabase } from '../lib/supabase';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, CheckCircle, AlertCircle, Loader2 } from 'lucide-react';
 import { careersEmail } from '../data/jobs';
@@ -111,31 +112,18 @@ export default function ApplicationModal({ isOpen, onClose, initialRole, jobId }
     setSubmitState('submitting');
     
     try {
-      const response = await fetch('/api/applications', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
+      const { error } = await supabase
+        .from('applications')
+        .insert([{
           ...formData,
-          job_id: jobId, // Attach database job ID
-          dateApplied: new Date().toISOString(),
-          status: 'New',
-          statusHistory: [{
-            status: 'New',
-            changedAt: new Date().toISOString(),
-            changedBy: 'System'
-          }],
-          resume: resume ? {
-            name: resume.name,
-            size: resume.size,
-            type: resume.type,
-            url: `/uploads/${resume.name}` // Mock URL for json-server
-          } : null
-        })
-      });
+          job_id: jobId,
+          status: 'New'
+        }]);
       
-      if(response.ok) {
+      if (!error) {
         setSubmitState('success');
       } else {
+        console.error(error);
         setSubmitState('fallback');
       }
     } catch(err) {
