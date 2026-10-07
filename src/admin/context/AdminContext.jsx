@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { jobs as staticJobs } from '../../data/jobs';
 
 const AdminContext = createContext();
 
@@ -40,20 +41,39 @@ export const AdminProvider = ({ children }) => {
     try {
       setLoading(true);
       const timestamp = Date.now();
-      const [appsRes, jobsRes, recsRes, intRes] = await Promise.all([
+      const [appsRes, recsRes, intRes] = await Promise.all([
         fetch(`${API_URL}/applications?t=${timestamp}`),
-        fetch(`${API_URL}/jobs?t=${timestamp}`),
         fetch(`${API_URL}/recruiters?t=${timestamp}`),
         fetch(`${API_URL}/interviews?t=${timestamp}`)
       ]);
       
       const apps = await appsRes.json();
-      const jbs = await jobsRes.json();
       const recs = await recsRes.json();
       const ints = await intRes.json();
       
       setApplications(Array.isArray(apps) ? apps.map(normalizeApplication) : []);
-      setJobs(Array.isArray(jbs) ? jbs.map(normalizeJob) : []);
+      
+      // Extract jobs directly from the user-side careers page data
+      const formattedStaticJobs = staticJobs.map(job => ({
+        id: job.id,
+        job_id: job.id,
+        title: job.title,
+        department: job.category || 'Engineering',
+        location: job.location || 'Remote',
+        employment_type: 'Full Time',
+        salary_min: job.package?.match(/\d+/)?.[0] || '',
+        salary_max: job.package?.match(/\d+–(\d+)/)?.[1] || '',
+        salary_currency: 'INR',
+        salary_period: 'LPA',
+        experience: job.experience,
+        description: job.shortDescription || job.description,
+        responsibilities: job.responsibilities || [],
+        required_skills: job.requiredSkills || [],
+        status: 'Published' // All jobs on the careers page are published
+      }));
+      
+      setJobs(formattedStaticJobs);
+      
       setRecruiters(Array.isArray(recs) ? recs : []);
       setInterviews(Array.isArray(ints) ? ints : []);
       setError(null);
