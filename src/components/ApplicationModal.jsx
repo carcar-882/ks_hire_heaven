@@ -118,6 +118,29 @@ export default function ApplicationModal({ isOpen, onClose, initialRole, jobId }
     setDbErrorMsg('');
     
     try {
+      let resume_url = null;
+      let resume_name = null;
+      
+      if (resume) {
+        const fileExt = resume.name.split('.').pop();
+        const fileName = `${Date.now()}_${Math.random().toString(36).substring(7)}.${fileExt}`;
+        
+        const { data: uploadData, error: uploadError } = await supabase.storage
+          .from('resumes')
+          .upload(fileName, resume);
+          
+        if (uploadError) {
+          console.error('Resume upload error:', uploadError);
+          setDbErrorMsg(`Resume Upload Failed: ${uploadError.message}`);
+          setSubmitState('error');
+          return;
+        }
+        
+        const { data: { publicUrl } } = supabase.storage.from('resumes').getPublicUrl(fileName);
+        resume_url = publicUrl;
+        resume_name = resume.name;
+      }
+
       const payload = {
           name: formData.name,
           phone: formData.phone,
@@ -130,7 +153,9 @@ export default function ApplicationModal({ isOpen, onClose, initialRole, jobId }
           noticeperiod: formData.noticePeriod,
           message: formData.message,
           job_id: jobId === 'general-application' ? null : jobId,
-          status: 'New'
+          status: 'New',
+          resume_url: resume_url,
+          resume_name: resume_name
       };
       
       console.log('SUBMITTING PAYLOAD:', payload);

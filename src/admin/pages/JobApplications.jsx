@@ -304,7 +304,13 @@ const JobApplications = ({ title = "Applications", statusFilters = ['New', 'Pipe
                   <p style={{margin: '4px 0 0 0', fontSize: '0.875rem', color: 'var(--text-muted)'}}>Uploaded with application</p>
                 </div>
                 <div className="no-print">
-                  <button className="btn-secondary" onClick={() => alert("In a production backend, this would securely download the file.")}>
+                  <button className="btn-secondary" onClick={() => {
+                    if (selectedApp.resume_url) {
+                      window.open(selectedApp.resume_url, '_blank');
+                    } else {
+                      alert('No resume file was found for this candidate.');
+                    }
+                  }}>
                     <Download size={16} /> Download
                   </button>
                 </div>
