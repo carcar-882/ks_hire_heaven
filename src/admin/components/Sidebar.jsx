@@ -17,7 +17,7 @@ import { useAdmin } from '../context/AdminContext';
 import brandLogo from '../../assets/logo.png';
 
 const Sidebar = () => {
-  const { logout } = useAdmin();
+  const { applications, logout } = useAdmin();
   return (
     <aside className="admin-sidebar">
       <div className="admin-sidebar-header">
