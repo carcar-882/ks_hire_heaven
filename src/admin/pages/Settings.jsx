@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAdmin } from '../context/AdminContext';
 import { Save, Globe, LayoutTemplate, Mail, Phone, MapPin } from 'lucide-react';
+import { supabase } from '../../lib/supabase';
 
 const Settings = () => {
-  // In a full implementation, these would fetch and save to useAdmin context websiteSettings
   const [activeTab, setActiveTab] = useState('general');
   const [formData, setFormData] = useState({
     companyName: 'KS Hire Heaven Software India Pvt Ltd',
@@ -15,15 +15,54 @@ const Settings = () => {
   });
 
   const [saving, setSaving] = useState(false);
+  const [loading, setLoading] = useState(true);
 
-  const handleSave = () => {
+  useEffect(() => {
+    const fetchSettings = async () => {
+      try {
+        const { data, error } = await supabase.from('settings').select('*').eq('id', 1).single();
+        if (data) {
+          setFormData({
+            companyName: data.company_name || formData.companyName,
+            phone: data.phone || formData.phone,
+            email: data.email || formData.email,
+            address: data.address || formData.address,
+            linkedin: data.linkedin || formData.linkedin,
+            instagram: data.instagram || formData.instagram
+          });
+        }
+      } catch (error) {
+        console.error('Error fetching settings:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchSettings();
+  }, []);
+
+  const handleSave = async () => {
     setSaving(true);
-    // Simulate API save
-    setTimeout(() => {
+    try {
+      const { error } = await supabase.from('settings').upsert({
+        id: 1,
+        company_name: formData.companyName,
+        phone: formData.phone,
+        email: formData.email,
+        address: formData.address,
+        linkedin: formData.linkedin,
+        instagram: formData.instagram
+      });
+      if (error) throw error;
+      alert('CMS Settings saved successfully! The live site will update immediately.');
+    } catch (error) {
+      console.error('Error saving settings:', error);
+      alert('Failed to save settings.');
+    } finally {
       setSaving(false);
-      alert('CMS Settings saved successfully! (Simulated)');
-    }, 800);
+    }
   };
+
+  if (loading) return <div style={{padding: '48px'}}>Loading Settings...</div>;
 
   return (
     <div className="settings-module">

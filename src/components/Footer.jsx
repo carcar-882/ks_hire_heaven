@@ -3,6 +3,8 @@ import { ArrowRight, ArrowUpRight, AtSign, Linkedin, Mail, MessageCircle, Phone,
 import brandLogo from '../assets/logo.png';
 import { contact, company } from './about/aboutData';
 import './Footer.css';
+import { supabase } from '../lib/supabase';
+import { useEffect, useState } from 'react';
 
 const companyLinks = [
   { label: 'About Us', href: '/about' },
@@ -31,6 +33,31 @@ const footerReveal = {
 
 export default function Footer() {
   const reduceMotion = useReducedMotion();
+  const [cms, setCms] = useState({
+    companyName: company.name,
+    phone: '7075836434',
+    email: contact.email,
+    linkedin: `LinkedIn A ${company.name}`
+  });
+
+  useEffect(() => {
+    const fetchCMS = async () => {
+      try {
+        const { data, error } = await supabase.from('settings').select('*').eq('id', 1).single();
+        if (data) {
+          setCms({
+            companyName: data.company_name || company.name,
+            phone: data.phone || '7075836434',
+            email: data.email || contact.email,
+            linkedin: data.linkedin || `LinkedIn A ${company.name}`
+          });
+        }
+      } catch (err) {
+        console.error('Failed to load CMS settings', err);
+      }
+    };
+    fetchCMS();
+  }, []);
 
   return (
     <motion.footer
@@ -99,7 +126,7 @@ export default function Footer() {
             <ArrowRight size={15} aria-hidden="true" />
           </motion.a>
           <p className="site-footer-tagline">Cloud Solutions. Digital Innovation. Business Growth.</p>
-          <p className="site-footer-description">Hire Heaven Software India Private Limited is an emerging technology company focused on cloud solutions, digital transformation, Azure infrastructure, data, DevOps, analytics, and business technology.</p>
+          <p className="site-footer-description">{cms.companyName} is an emerging technology company focused on cloud solutions, digital transformation, Azure infrastructure, data, DevOps, analytics, and business technology.</p>
         </motion.section>
 
         <motion.nav className="site-footer-column" aria-label="Company links" variants={footerReveal} transition={{ duration: reduceMotion ? 0.2 : 0.42 }}>
@@ -114,17 +141,17 @@ export default function Footer() {
 
         <motion.address className="site-footer-column site-footer-contact" variants={footerReveal} transition={{ duration: reduceMotion ? 0.2 : 0.42 }}>
           <h2>Get in Touch</h2>
-          <p className="site-footer-company-name">{company.name}</p>
-          <a href={`mailto:${contact.email}`}><Mail size={16} aria-hidden="true" /><span>{contact.email}</span></a>
-          <a href="tel:+917075836434"><Phone size={16} aria-hidden="true" /><span>7075836434</span></a>
+          <p className="site-footer-company-name">{cms.companyName}</p>
+          <a href={`mailto:${cms.email}`}><Mail size={16} aria-hidden="true" /><span>{cms.email}</span></a>
+          <a href={`tel:${cms.phone.replace(/[^0-9+]/g, '')}`}><Phone size={16} aria-hidden="true" /><span>{cms.phone}</span></a>
           <a href="https://wa.me/917981036434" target="_blank" rel="noopener noreferrer"><MessageCircle size={16} aria-hidden="true" /><span>WhatsApp · 7981036434</span><ArrowUpRight size={13} aria-hidden="true" /></a>
           <a href="https://x.com/Kshhsipl" target="_blank" rel="noopener noreferrer"><AtSign size={16} aria-hidden="true" /><span>X · {contact.x}</span><ArrowUpRight size={13} aria-hidden="true" /></a>
-          <p className="site-footer-linkedin"><Linkedin size={16} aria-hidden="true" /><span>LinkedIn · {company.name}</span></p>
+          {cms.linkedin && <p className="site-footer-linkedin"><Linkedin size={16} aria-hidden="true" /><a href={cms.linkedin.startsWith('http') ? cms.linkedin : `https://${cms.linkedin}`} target="_blank" rel="noopener noreferrer" style={{textDecoration: 'none', color: 'inherit'}}><span>LinkedIn</span></a></p>}
         </motion.address>
       </motion.div>
 
       <div className="site-footer-bottom">
-        <span>© 2026 KS Hire Heaven Software India Pvt Ltd. All rights reserved.</span>
+        <span>© 2026 {cms.companyName}. All rights reserved.</span>
         <div className="site-footer-legal"><span aria-disabled="true">Privacy Policy</span><span aria-disabled="true">Terms &amp; Conditions</span></div>
       </div>
     </motion.footer>
