@@ -136,11 +136,11 @@ export default function ApplicationModal({ isOpen, onClose, initialRole, jobId }
       if(response.ok) {
         setSubmitState('success');
       } else {
-        setSubmitState('error');
+        setSubmitState('fallback');
       }
     } catch(err) {
       console.error(err);
-      setSubmitState('error');
+      setSubmitState('fallback');
     }
   };
 
