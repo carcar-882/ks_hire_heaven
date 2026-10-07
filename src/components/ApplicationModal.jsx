@@ -186,23 +186,6 @@ export default function ApplicationModal({ isOpen, onClose, initialRole, jobId }
     }
   };
 
-  const handleOpenWhatsApp = () => {
-    const message = encodeURIComponent(
-      `*Application for ${formData.role}*\n` +
-      `*Application ID:* KSHH${applicationId.substring(0, 4).toUpperCase()}\n\n` +
-      `*Name:* ${formData.name}\n` +
-      `*Contact Number:* ${formData.phone}\n` +
-      `*Email:* ${formData.email}\n` +
-      `*Experience:* ${formData.experience}\n` +
-      `*Location:* ${formData.location}\n` +
-      `*Current CTC:* ${formData.currentCTC || 'N/A'}\n` +
-      `*Expected CTC:* ${formData.expectedCTC || 'N/A'}\n` +
-      `*Notice Period:* ${formData.noticePeriod}\n\n` +
-      `*Message:*\n${formData.message || 'N/A'}`
-    );
-    window.open(`https://api.whatsapp.com/send?phone=917981036434&text=${message}`, '_blank');
-  };
-
   if (!isOpen) return null;
 
   return (
@@ -224,7 +207,7 @@ export default function ApplicationModal({ isOpen, onClose, initialRole, jobId }
             <div className="modal-state success-state">
               <CheckCircle size={56} className="state-icon" />
               <h2>Application Submitted Successfully</h2>
-              <p>Your application has been recorded successfully. You can also send your application details and resume through WhatsApp to the recruitment team.</p>
+              <p>Your application has been recorded successfully. Our recruitment team will review your profile and get back to you soon.</p>
               <div className="applied-role">
                 <span>Application ID:</span>
                 <strong>{'KSHH' + applicationId.substring(0, 4).toUpperCase()}</strong>
@@ -234,8 +217,7 @@ export default function ApplicationModal({ isOpen, onClose, initialRole, jobId }
                 <strong>{formData.role}</strong>
               </div>
               <div className="state-actions" style={{marginTop: '24px'}}>
-                <button className="btn-primary" onClick={handleOpenWhatsApp}>Send via WhatsApp</button>
-                <button className="btn-secondary" onClick={onClose}>Close</button>
+                <button className="btn-primary" onClick={onClose} style={{width: '100%'}}>Close</button>
               </div>
             </div>
           )}
