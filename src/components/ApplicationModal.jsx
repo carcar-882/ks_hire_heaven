@@ -105,6 +105,8 @@ export default function ApplicationModal({ isOpen, onClose, initialRole, jobId }
     return Object.keys(newErrors).length === 0;
   };
 
+  const [applicationId, setApplicationId] = useState('');
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validateForm()) return;
@@ -112,29 +114,39 @@ export default function ApplicationModal({ isOpen, onClose, initialRole, jobId }
     setSubmitState('submitting');
     
     try {
-      const { error } = await supabase
+      const { data, error } = await supabase
         .from('applications')
         .insert([{
           ...formData,
           job_id: jobId,
           status: 'New'
-        }]);
+        }])
+        .select()
+        .single();
       
-      if (!error) {
-        setSubmitState('success');
-      } else {
-        console.error(error);
-        setSubmitState('fallback');
+      if (error) {
+        console.error('Application insert failed:', error);
+        setSubmitState('error');
+        return;
       }
+
+      if (!data) {
+        throw new Error('Application was not saved');
+      }
+      
+      setApplicationId(data.id);
+      setSubmitState('success');
+
     } catch(err) {
       console.error(err);
-      setSubmitState('fallback');
+      setSubmitState('error');
     }
   };
 
   const handleOpenWhatsApp = () => {
     const message = encodeURIComponent(
-      `*Application for ${formData.role}*\n\n` +
+      `*Application for ${formData.role}*\n` +
+      `*Application ID:* ${applicationId}\n\n` +
       `*Name:* ${formData.name}\n` +
       `*Contact Number:* ${formData.phone}\n` +
       `*Email:* ${formData.email}\n` +
@@ -169,14 +181,18 @@ export default function ApplicationModal({ isOpen, onClose, initialRole, jobId }
             <div className="modal-state success-state">
               <CheckCircle size={56} className="state-icon" />
               <h2>Application Submitted Successfully</h2>
-              <p>Thank you for applying to Hire Heaven Software India Private Limited. Our recruitment team will review your application and contact you if your profile matches the role requirements.</p>
+              <p>Your application has been recorded successfully. You can also send your application details and resume through WhatsApp to the recruitment team.</p>
               <div className="applied-role">
+                <span>Application ID:</span>
+                <strong>{applicationId}</strong>
+              </div>
+              <div className="applied-role" style={{marginTop: '8px'}}>
                 <span>Applied Role:</span>
                 <strong>{formData.role}</strong>
               </div>
-              <div className="state-actions">
-                <button className="btn-secondary" onClick={onClose}>Explore More Positions</button>
-                <button className="btn-primary" onClick={onClose}>Close</button>
+              <div className="state-actions" style={{marginTop: '24px'}}>
+                <button className="btn-primary" onClick={handleOpenWhatsApp}>Send via WhatsApp</button>
+                <button className="btn-secondary" onClick={onClose}>Close</button>
               </div>
             </div>
           )}
@@ -184,23 +200,11 @@ export default function ApplicationModal({ isOpen, onClose, initialRole, jobId }
           {submitState === 'error' && (
             <div className="modal-state error-state">
               <AlertCircle size={56} className="state-icon" />
-              <h2>Something Went Wrong</h2>
-              <p>We couldn't submit your application right now. Please try again or contact our recruitment team.</p>
+              <h2>We couldn't submit your application right now.</h2>
+              <p>Please try again in a few moments. Your information has not been submitted yet.</p>
               <div className="state-actions">
                 <button className="btn-secondary" onClick={() => setSubmitState('idle')}>Try Again</button>
-                <a href={`mailto:${careersEmail}`} className="btn-primary">Contact Recruitment Team</a>
-              </div>
-            </div>
-          )}
-
-          {submitState === 'fallback' && (
-            <div className="modal-state fallback-state">
-              <CheckCircle size={56} className="state-icon" />
-              <h2>Application Ready</h2>
-              <p>Your application is ready to be sent. Please send this message via WhatsApp and attach your resume in the chat.</p>
-              <div className="state-actions">
-                <button className="btn-primary" onClick={handleOpenWhatsApp}>Send via WhatsApp</button>
-                <button className="btn-secondary" onClick={onClose}>Close</button>
+                <button className="btn-primary" onClick={onClose}>Cancel</button>
               </div>
             </div>
           )}
