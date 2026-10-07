@@ -105,7 +105,6 @@ export default function ApplicationModal({ isOpen, onClose, initialRole, jobId }
     return Object.keys(newErrors).length === 0;
   };
 
-  const [submitState, setSubmitState] = useState('idle');
   const [dbErrorMsg, setDbErrorMsg] = useState('');
   
   const [applicationId, setApplicationId] = useState('');
