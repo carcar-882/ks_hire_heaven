@@ -10,7 +10,8 @@ import {
   UserCog, 
   BarChart3, 
   Settings,
-  LogOut
+  LogOut,
+  CheckCircle
 } from 'lucide-react';
 import { useAdmin } from '../context/AdminContext';
 import brandLogo from '../../assets/logo.png';
@@ -35,26 +36,44 @@ const Sidebar = () => {
         <div className="admin-nav-group">
           <div className="admin-nav-group-title">Recruitment</div>
           <NavLink to="/admin/applications" className={({isActive}) => `admin-nav-link ${isActive ? 'active' : ''}`}>
-            <Users /> Applications
+            <div style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%'}}>
+              <div style={{display: 'flex', alignItems: 'center', gap: '12px'}}><Users size={20} /> Applications</div>
+              <span className="sidebar-count">{applications.filter(a => !a.status || a.status === 'New' || a.status === 'Pipeline').length}</span>
+            </div>
           </NavLink>
           <NavLink to="/admin/shortlisted" className={({isActive}) => `admin-nav-link ${isActive ? 'active' : ''}`}>
-            <UserCheck /> Shortlisted
+            <div style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%'}}>
+              <div style={{display: 'flex', alignItems: 'center', gap: '12px'}}><UserCheck size={20} /> Shortlisted</div>
+              <span className="sidebar-count">{applications.filter(a => a.status === 'Shortlisted').length}</span>
+            </div>
           </NavLink>
           <NavLink to="/admin/rejected" className={({isActive}) => `admin-nav-link ${isActive ? 'active' : ''}`}>
-            <UserX /> Rejected
+            <div style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%'}}>
+              <div style={{display: 'flex', alignItems: 'center', gap: '12px'}}><UserX size={20} /> Rejected</div>
+              <span className="sidebar-count">{applications.filter(a => a.status === 'Rejected').length}</span>
+            </div>
           </NavLink>
         </div>
 
         <div className="admin-nav-group">
           <div className="admin-nav-group-title">Hiring</div>
           <NavLink to="/admin/jobs" className={({isActive}) => `admin-nav-link ${isActive ? 'active' : ''}`}>
-            <Briefcase /> Jobs
+            <div style={{display: 'flex', alignItems: 'center', gap: '12px'}}><Briefcase size={20} /> Jobs</div>
           </NavLink>
           <NavLink to="/admin/interviews" className={({isActive}) => `admin-nav-link ${isActive ? 'active' : ''}`}>
-            <CalendarDays /> Interviews
+            <div style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%'}}>
+              <div style={{display: 'flex', alignItems: 'center', gap: '12px'}}><CalendarDays size={20} /> Interviews</div>
+              <span className="sidebar-count">{applications.filter(a => a.status === 'Interview').length}</span>
+            </div>
+          </NavLink>
+          <NavLink to="/admin/selected" className={({isActive}) => `admin-nav-link ${isActive ? 'active' : ''}`}>
+            <div style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%'}}>
+              <div style={{display: 'flex', alignItems: 'center', gap: '12px'}}><CheckCircle size={20} /> Selected</div>
+              <span className="sidebar-count">{applications.filter(a => a.status === 'Selected').length}</span>
+            </div>
           </NavLink>
           <NavLink to="/admin/recruiters" className={({isActive}) => `admin-nav-link ${isActive ? 'active' : ''}`}>
-            <UserCog /> Recruiters
+            <div style={{display: 'flex', alignItems: 'center', gap: '12px'}}><UserCog size={20} /> Recruiters</div>
           </NavLink>
         </div>
 

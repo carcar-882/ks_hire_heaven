@@ -3,18 +3,21 @@ import { useAdmin } from '../context/AdminContext';
 import { Search, Filter, Download, Plus, MoreVertical, LayoutGrid, List, Eye, X, FileText, CheckCircle, XCircle } from 'lucide-react';
 import '../styles/admin.css';
 
-const PIPELINE_STAGES = ['New', 'Shortlisted', 'Interview', 'Selected', 'Hired', 'Pipeline', 'Rejected'];
+const PIPELINE_STAGES = ['New', 'Pipeline', 'Shortlisted', 'Interview', 'Selected', 'Rejected'];
 
-const JobApplications = () => {
+const JobApplications = ({ title = "Applications", statusFilters = ['New', 'Pipeline'] }) => {
   const { applications, updateApplicationStatus } = useAdmin();
   const [searchTerm, setSearchTerm] = useState('');
   const [viewMode, setViewMode] = useState('table'); // 'table' or 'pipeline'
   const [selectedApp, setSelectedApp] = useState(null);
 
-  const filteredApps = applications.filter(app => 
-    (app.name || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
-    (app.role || '').toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredApps = applications.filter(app => {
+    const appStatus = app.status || 'New';
+    const matchesStatus = statusFilters.includes(appStatus);
+    const matchesSearch = (app.name || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+                          (app.role || '').toLowerCase().includes(searchTerm.toLowerCase());
+    return matchesStatus && matchesSearch;
+  });
 
   const handleExportCSV = () => {
     if (!selectedApp) return;
@@ -53,8 +56,8 @@ const JobApplications = () => {
     <div className="job-applications">
       <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px'}} className="no-print">
         <div>
-          <h2 style={{margin: 0, marginBottom: '8px'}}>Applications</h2>
-          <p style={{margin: 0, color: 'var(--text-muted)', fontSize: '0.875rem'}}>Manage and review candidate applications.</p>
+          <h2 style={{margin: 0, marginBottom: '8px'}}>{title}</h2>
+          <p style={{margin: 0, color: 'var(--text-muted)', fontSize: '0.875rem'}}>Manage and review {title.toLowerCase()} candidates.</p>
         </div>
         <div style={{display: 'flex', gap: '12px'}}>
           <div style={{display: 'flex', background: 'var(--bg-color)', borderRadius: '8px', border: '1px solid var(--border-color)', overflow: 'hidden'}}>

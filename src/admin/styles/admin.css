@@ -417,3 +417,6 @@ body.admin-body {
   color: var(--text-muted);
   margin-top: 4px;
 }
+
+.sidebar-count { background-color: var(--primary-purple); color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.75rem; font-weight: 600; }
+.admin-nav-link.active .sidebar-count { background-color: white; color: var(--primary-purple); }

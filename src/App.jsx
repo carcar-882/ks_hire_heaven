@@ -85,11 +85,12 @@ export default function App() {
       }>
         <Route index element={<Navigate to="/admin/dashboard" replace />} />
         <Route path="dashboard" element={<Dashboard />} />
-        <Route path="applications" element={<JobApplications />} />
-        <Route path="shortlisted" element={<Placeholder title="Shortlisted" />} />
-        <Route path="rejected" element={<Placeholder title="Rejected" />} />
+        <Route path="applications" element={<JobApplications title="Applications" statusFilters={['New', 'Pipeline']} />} />
+        <Route path="shortlisted" element={<JobApplications title="Shortlisted" statusFilters={['Shortlisted']} />} />
+        <Route path="rejected" element={<JobApplications title="Rejected" statusFilters={['Rejected']} />} />
         <Route path="jobs" element={<Jobs />} />
-        <Route path="interviews" element={<Interviews />} />
+        <Route path="interviews" element={<JobApplications title="Interviews" statusFilters={['Interview']} />} />
+        <Route path="selected" element={<JobApplications title="Selected" statusFilters={['Selected']} />} />
         <Route path="recruiters" element={<Recruiters />} />
         <Route path="analytics" element={<Analytics />} />
         <Route path="settings" element={<Settings />} />
