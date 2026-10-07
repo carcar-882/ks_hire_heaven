@@ -164,7 +164,7 @@ export default function ApplicationModal({ isOpen, onClose, initialRole, jobId }
   const handleOpenWhatsApp = () => {
     const message = encodeURIComponent(
       `*Application for ${formData.role}*\n` +
-      `*Application ID:* ${applicationId}\n\n` +
+      `*Application ID:* KSHH${applicationId.substring(0, 4).toUpperCase()}\n\n` +
       `*Name:* ${formData.name}\n` +
       `*Contact Number:* ${formData.phone}\n` +
       `*Email:* ${formData.email}\n` +
@@ -202,7 +202,7 @@ export default function ApplicationModal({ isOpen, onClose, initialRole, jobId }
               <p>Your application has been recorded successfully. You can also send your application details and resume through WhatsApp to the recruitment team.</p>
               <div className="applied-role">
                 <span>Application ID:</span>
-                <strong>{applicationId}</strong>
+                <strong>{'KSHH' + applicationId.substring(0, 4).toUpperCase()}</strong>
               </div>
               <div className="applied-role" style={{marginTop: '8px'}}>
                 <span>Applied Role:</span>

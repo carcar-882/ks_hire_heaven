@@ -60,9 +60,9 @@ const Dashboard = () => {
                     <div className="candidate-name">{app.name}</div>
                     <div className="candidate-job">{app.experience} • {app.location}</div>
                   </td>
-                  <td>{app.applicationId}</td>
-                  <td>{app.jobTitle}</td>
-                  <td>{app.appliedDate}</td>
+                  <td>{'KSHH' + app.id.substring(0, 4).toUpperCase()}</td>
+                  <td>{app.role}</td>
+                  <td>{app.dateApplied ? new Date(app.dateApplied).toLocaleDateString() : 'N/A'}</td>
                   <td>
                     <span className={`status-badge status-${app.status.toLowerCase().replace(' ', '_')}`}>
                       {app.status}
