@@ -117,7 +117,16 @@ export default function ApplicationModal({ isOpen, onClose, initialRole, jobId }
       const { data, error } = await supabase
         .from('applications')
         .insert([{
-          ...formData,
+          name: formData.name,
+          phone: formData.phone,
+          email: formData.email,
+          role: formData.role,
+          experience: formData.experience,
+          location: formData.location,
+          currentctc: formData.currentCTC,
+          expectedctc: formData.expectedCTC,
+          noticeperiod: formData.noticePeriod,
+          message: formData.message,
           job_id: jobId === 'general-application' ? null : jobId,
           status: 'New'
         }])

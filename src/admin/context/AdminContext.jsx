@@ -30,10 +30,16 @@ export const AdminProvider = ({ children }) => {
         .from('applications')
         .select('*');
         
-      if (appsError) throw appsError;
+      const formattedApps = (appsData || []).map(app => ({
+        ...app,
+        currentCTC: app.currentctc,
+        expectedCTC: app.expectedctc,
+        noticePeriod: app.noticeperiod,
+        dateApplied: app.created_at
+      }));
       
       setJobs(jobsData || []);
-      setApplications(appsData || []);
+      setApplications(formattedApps);
       setRecruiters([]);
       setInterviews([]);
       setError(null);
