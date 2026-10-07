@@ -3,7 +3,7 @@ import { useAdmin } from '../context/AdminContext';
 import { Search, Filter, Download, Plus, MoreVertical, LayoutGrid, List, Eye, X, FileText, CheckCircle, XCircle } from 'lucide-react';
 import '../styles/admin.css';
 
-const PIPELINE_STAGES = ['New', 'Shortlisted', 'Interview', 'Selected', 'Hired', 'Rejected'];
+const PIPELINE_STAGES = ['New', 'Shortlisted', 'Interview', 'Selected', 'Hired', 'Pipeline', 'Rejected'];
 
 const JobApplications = () => {
   const { applications, updateApplicationStatus } = useAdmin();
