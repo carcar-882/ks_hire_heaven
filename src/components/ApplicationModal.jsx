@@ -105,6 +105,9 @@ export default function ApplicationModal({ isOpen, onClose, initialRole, jobId }
     return Object.keys(newErrors).length === 0;
   };
 
+  const [submitState, setSubmitState] = useState('idle');
+  const [dbErrorMsg, setDbErrorMsg] = useState('');
+  
   const [applicationId, setApplicationId] = useState('');
 
   const handleSubmit = async (e) => {
@@ -112,11 +115,10 @@ export default function ApplicationModal({ isOpen, onClose, initialRole, jobId }
     if (!validateForm()) return;
     
     setSubmitState('submitting');
+    setDbErrorMsg('');
     
     try {
-      const { data, error } = await supabase
-        .from('applications')
-        .insert([{
+      const payload = {
           name: formData.name,
           phone: formData.phone,
           email: formData.email,
@@ -129,12 +131,19 @@ export default function ApplicationModal({ isOpen, onClose, initialRole, jobId }
           message: formData.message,
           job_id: jobId === 'general-application' ? null : jobId,
           status: 'New'
-        }])
+      };
+      
+      console.log('SUBMITTING PAYLOAD:', payload);
+
+      const { data, error } = await supabase
+        .from('applications')
+        .insert([payload])
         .select()
         .single();
       
       if (error) {
         console.error('Application insert failed:', error);
+        setDbErrorMsg(`DB Error: ${error.message} (Code: ${error.code})`);
         setSubmitState('error');
         return;
       }
@@ -211,6 +220,12 @@ export default function ApplicationModal({ isOpen, onClose, initialRole, jobId }
               <AlertCircle size={56} className="state-icon" />
               <h2>We couldn't submit your application right now.</h2>
               <p>Please try again in a few moments. Your information has not been submitted yet.</p>
+              {dbErrorMsg && (
+                <div style={{background: '#fee2e2', color: '#991b1b', padding: '12px', borderRadius: '8px', fontSize: '0.875rem', marginTop: '16px', textAlign: 'left', wordBreak: 'break-all'}}>
+                  <strong>Developer Error Details:</strong><br/>
+                  {dbErrorMsg}
+                </div>
+              )}
               <div className="state-actions">
                 <button className="btn-secondary" onClick={() => setSubmitState('idle')}>Try Again</button>
                 <button className="btn-primary" onClick={onClose}>Cancel</button>
