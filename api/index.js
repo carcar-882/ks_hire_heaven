@@ -2,8 +2,14 @@ const jsonServer = require('json-server');
 const fs = require('fs');
 const path = require('path');
 
+const cors = require('cors');
 const server = jsonServer.create();
 const middlewares = jsonServer.defaults();
+
+server.use(cors({
+  origin: ['https://www.kshireheaven.in', 'https://kshireheaven.in', 'https://ks-hire-heaven.vercel.app', 'http://localhost:3000'],
+  credentials: true
+}));
 
 // Use /tmp for writable database on Vercel
 const dbPath = path.join(process.cwd(), 'db.json');
