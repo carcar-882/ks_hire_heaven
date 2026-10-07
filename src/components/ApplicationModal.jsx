@@ -109,6 +109,7 @@ export default function ApplicationModal({ isOpen, onClose, initialRole, jobId }
   const [dbErrorMsg, setDbErrorMsg] = useState('');
   
   const [applicationId, setApplicationId] = useState('');
+  const [applicationNumber, setApplicationNumber] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -178,6 +179,7 @@ export default function ApplicationModal({ isOpen, onClose, initialRole, jobId }
       }
       
       setApplicationId(data.id);
+      setApplicationNumber(data.application_number);
       setSubmitState('success');
 
     } catch(err) {
@@ -210,7 +212,7 @@ export default function ApplicationModal({ isOpen, onClose, initialRole, jobId }
               <p>Your application has been recorded successfully. Our recruitment team will review your profile and get back to you soon.</p>
               <div className="applied-role">
                 <span>Application ID:</span>
-                <strong>{'KSHH' + applicationId.substring(0, 4).toUpperCase()}</strong>
+                <strong>{applicationNumber || 'Pending'}</strong>
               </div>
               <div className="applied-role" style={{marginTop: '8px'}}>
                 <span>Applied Role:</span>

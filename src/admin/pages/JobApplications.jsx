@@ -219,7 +219,7 @@ const JobApplications = ({ title = "Applications", statusFilters = ['New', 'Pipe
               <div style={{display: 'flex', alignItems: 'baseline', gap: '12px'}}>
                 <h2 style={{margin: 0}}>{selectedApp.name}</h2>
                 <span style={{fontSize: '0.875rem', padding: '4px 8px', backgroundColor: 'var(--bg-color)', borderRadius: '4px', border: '1px solid var(--border-color)', fontWeight: 600, color: 'var(--primary-purple)'}}>
-                  {'KSHH' + selectedApp.id.substring(0, 4).toUpperCase()}
+                  {selectedApp.application_number || 'Pending'}
                 </span>
               </div>
               <div style={{marginTop: '8px', color: 'var(--text-muted)', display: 'flex', gap: '12px'}}>

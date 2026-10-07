@@ -60,7 +60,7 @@ const Dashboard = () => {
                     <div className="candidate-name">{app.name}</div>
                     <div className="candidate-job">{app.experience} • {app.location}</div>
                   </td>
-                  <td>{'KSHH' + app.id.substring(0, 4).toUpperCase()}</td>
+                  <td>{app.application_number || 'Pending'}</td>
                   <td>{app.role}</td>
                   <td>{app.dateApplied ? new Date(app.dateApplied).toLocaleDateString() : 'N/A'}</td>
                   <td>
