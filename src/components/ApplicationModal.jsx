@@ -118,7 +118,7 @@ export default function ApplicationModal({ isOpen, onClose, initialRole, jobId }
         .from('applications')
         .insert([{
           ...formData,
-          job_id: jobId,
+          job_id: jobId === 'general-application' ? null : jobId,
           status: 'New'
         }])
         .select()

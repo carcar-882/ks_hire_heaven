@@ -362,7 +362,7 @@ export default function Careers() {
                         </div>
                       </div>
                     </details>
-                    <button className="btn-primary apply-btn" onClick={() => handleApply(job.title, job.id)}>
+                    <button className="btn-primary apply-btn" onClick={() => handleApply(job.title, job.job_id || job.id)}>
                       Apply Now
                     </button>
                   </div>
