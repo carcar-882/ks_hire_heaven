@@ -39,11 +39,12 @@ export const AdminProvider = ({ children }) => {
   const fetchData = async () => {
     try {
       setLoading(true);
+      const timestamp = Date.now();
       const [appsRes, jobsRes, recsRes, intRes] = await Promise.all([
-        fetch(`${API_URL}/applications`),
-        fetch(`${API_URL}/jobs`),
-        fetch(`${API_URL}/recruiters`),
-        fetch(`${API_URL}/interviews`)
+        fetch(`${API_URL}/applications?t=${timestamp}`),
+        fetch(`${API_URL}/jobs?t=${timestamp}`),
+        fetch(`${API_URL}/recruiters?t=${timestamp}`),
+        fetch(`${API_URL}/interviews?t=${timestamp}`)
       ]);
       
       const apps = await appsRes.json();
