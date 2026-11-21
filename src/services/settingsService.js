@@ -10,11 +10,10 @@ export const DEFAULT_SETTINGS = {
   email: 'kshh@kshireheaven.in',
   phone: '7075836434',
   whatsapp: '7981036434',
-  office_location: 'Alt. F, Begumpet, Hyderabad, Telangana, India.',
-  maps_link: 'https://maps.google.com/?q=Alt.+F,+Begumpet,+Hyderabad,+Telangana,+India',
-  registered_address: 'Plot No. 230 N/P, Sri Bhagya Nagar Colony, Hayathnagar, Hayathnagar, K.V. Rangareddy – 501505, Telangana, India.',
+  office_location: 'Hyderabad',
+  maps_link: 'https://maps.google.com/?q=Hyderabad,+Telangana,+India',
   cin: 'U62020TS2026PTC225045',
-  incorporation_date: '28 October 2026',
+  incorporation_date: 'October 2026',
   linkedin: 'https://linkedin.com/company/hireheaven',
   instagram: 'https://instagram.com/hireheaven',
   x: '@Kshhsipl'
@@ -36,6 +35,17 @@ export const getSettingsSync = () => {
     const local = localStorage.getItem(SETTINGS_STORAGE_KEY);
     if (local) {
       const parsed = JSON.parse(local);
+      // Cleanse outdated cached values
+      if (parsed.office_location && (parsed.office_location.includes('Begumpet') || parsed.office_location.includes('Alt. F'))) {
+        parsed.office_location = 'Hyderabad';
+      }
+      if (parsed.maps_link && parsed.maps_link.includes('Begumpet')) {
+        parsed.maps_link = 'https://maps.google.com/?q=Hyderabad,+Telangana,+India';
+      }
+      if (parsed.incorporation_date && parsed.incorporation_date.includes('28 October')) {
+        parsed.incorporation_date = 'October 2026';
+      }
+      delete parsed.registered_address;
       return { ...DEFAULT_SETTINGS, ...parsed };
     }
   } catch (e) {
@@ -54,6 +64,13 @@ export const fetchSettings = async () => {
       if (res.ok) {
         const apiData = await res.json();
         if (apiData && typeof apiData === 'object') {
+          if (apiData.office_location && (apiData.office_location.includes('Begumpet') || apiData.office_location.includes('Alt. F'))) {
+            apiData.office_location = 'Hyderabad';
+          }
+          if (apiData.incorporation_date && apiData.incorporation_date.includes('28 October')) {
+            apiData.incorporation_date = 'October 2026';
+          }
+          delete apiData.registered_address;
           settings = { ...settings, ...apiData };
           try {
             localStorage.setItem(SETTINGS_STORAGE_KEY, JSON.stringify(settings));
@@ -77,9 +94,8 @@ export const fetchSettings = async () => {
           email: data.email || settings.email,
           phone: data.phone || settings.phone,
           whatsapp: data.whatsapp || settings.whatsapp,
-          office_location: data.address || data.office_location || settings.office_location,
+          office_location: (data.address || data.office_location || settings.office_location || '').includes('Begumpet') ? 'Hyderabad' : (data.address || data.office_location || settings.office_location),
           maps_link: data.maps_link || settings.maps_link,
-          registered_address: data.registered_address || settings.registered_address,
           cin: data.cin || settings.cin,
           incorporation_date: data.incorporation_date || settings.incorporation_date,
           linkedin: data.linkedin || settings.linkedin,
@@ -101,6 +117,10 @@ export const fetchSettings = async () => {
 
 export const saveSettings = async (newSettings) => {
   const merged = { ...getSettingsSync(), ...newSettings };
+  delete merged.registered_address;
+  if (merged.office_location && (merged.office_location.includes('Begumpet') || merged.office_location.includes('Alt. F'))) {
+    merged.office_location = 'Hyderabad';
+  }
   
   // 1. Persist locally first so changes are immediate & durable
   if (typeof localStorage !== 'undefined') {
@@ -143,7 +163,6 @@ export const saveSettings = async (newSettings) => {
         address: merged.office_location,
         office_location: merged.office_location,
         maps_link: merged.maps_link,
-        registered_address: merged.registered_address,
         cin: merged.cin,
         incorporation_date: merged.incorporation_date,
         linkedin: merged.linkedin,
@@ -162,18 +181,18 @@ export const saveSettings = async (newSettings) => {
   };
 };
 
-export const subscribeSettings = (callback) => {
+export const subscribeToSettings = (callback) => {
   if (typeof window === 'undefined') return () => {};
-
-  const handleCustomEvent = (event) => {
-    if (event.detail) callback(event.detail);
+  
+  const handleCustomEvent = (e) => {
+    callback(e.detail);
   };
-
-  const handleStorageEvent = (event) => {
-    if (event.key === SETTINGS_STORAGE_KEY && event.newValue) {
+  
+  const handleStorageEvent = (e) => {
+    if (e.key === SETTINGS_STORAGE_KEY && e.newValue) {
       try {
-        callback(JSON.parse(event.newValue));
-      } catch (e) {}
+        callback(JSON.parse(e.newValue));
+      } catch (err) {}
     }
   };
 
@@ -185,3 +204,6 @@ export const subscribeSettings = (callback) => {
     window.removeEventListener('storage', handleStorageEvent);
   };
 };
+
+export const subscribeSettings = subscribeToSettings;
+

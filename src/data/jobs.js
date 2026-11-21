@@ -6,7 +6,7 @@ export const jobs = [
     title: 'Freshers Opportunity',
     experience: 'Freshers',
     package: '₹3.5 LPA – ₹4 LPA',
-    location: 'Alt. F, Begumpet, Hyderabad, Telangana, India.',
+    location: 'Hyderabad',
     project: 'Enterprise Cloud & Digital Solutions',
     projectTenure: 'Full Time',
     badge: 'FRESHERS RECRUITMENT',

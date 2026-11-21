@@ -232,7 +232,7 @@ export default function Careers() {
                   <span className="stat-label">Package Range</span>
                 </div>
                 <div className="stat-item">
-                  <span className="stat-value">Begumpet, Hyderabad</span>
+                  <span className="stat-value">Hyderabad</span>
                   <span className="stat-label">Location</span>
                 </div>
                 <div className="stat-item">
@@ -295,7 +295,7 @@ export default function Careers() {
               </div>
               <div className="pd-item">
                 <span className="pd-label">Location</span>
-                <span className="pd-value">Alt. F, Begumpet, Hyderabad</span>
+                <span className="pd-value">Hyderabad</span>
               </div>
               <div className="pd-item">
                 <span className="pd-label">Technology</span>

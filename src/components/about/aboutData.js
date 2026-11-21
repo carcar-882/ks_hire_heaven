@@ -7,10 +7,9 @@ export const company = {
   vision: 'To become a trusted cloud technology partner for businesses by delivering secure, scalable, and innovative digital solutions.',
   mission: 'To simplify cloud adoption and help organizations leverage Azure, AWS, and GCP technologies to build efficient, secure, and scalable digital environments.',
   cin: 'U62020TS2026PTC225045',
-  incorporationDate: '28 October 2026',
-  registeredOffice: 'Plot No. 230 N/P, Sri Bhagya Nagar Colony, Hayathnagar, Hayathnagar, K.V. Rangareddy – 501505, Telangana, India.',
-  officeLocation: 'Alt. F, Begumpet, Hyderabad, Telangana, India.',
-  mapsLink: 'https://maps.google.com/?q=Alt.+F,+Begumpet,+Hyderabad,+Telangana,+India',
+  incorporationDate: 'October 2026',
+  officeLocation: 'Hyderabad',
+  mapsLink: 'https://maps.google.com/?q=Hyderabad,+Telangana,+India',
 };
 
 export const snapshots = [
@@ -19,7 +18,7 @@ export const snapshots = [
   { label: 'Focus', value: 'Cloud & IT Services' },
   { label: 'Customer focus', value: 'Startups · SMBs · Enterprises' },
   { label: 'CIN', value: 'U62020TS2026PTC225045' },
-  { label: 'Operational Office', value: 'Alt. F, Begumpet, Hyderabad' },
+  { label: 'Office Location', value: 'Hyderabad' },
 ];
 
 export const expertise = [
@@ -70,20 +69,20 @@ export const teamMembers = [
     initials: 'KSB',
   },
   {
-    id: 'kanakam-tejaswini',
-    name: 'Kanakam Tejaswini',
+    id: 'dappu-tejaswini',
+    name: 'Dappu Tejaswini',
     role: 'Chief Executive Officer (CEO)',
     description: 'Leading the company\'s strategic direction, business operations, growth initiatives, and organizational development.',
     image: ceoImg,
-    initials: 'KT',
+    initials: 'DT',
   },
   {
-    id: 'kavya-kanakam',
-    name: 'Kavya Kanakam',
+    id: 'kavya',
+    name: 'Kavya',
     role: 'Corporate / Functional Director',
     description: 'Supporting corporate functions, operational coordination, organizational processes, and functional business initiatives.',
     image: dirImg,
-    initials: 'KK',
+    initials: 'K',
   },
 ];
 
@@ -91,9 +90,8 @@ export const contact = {
   email: 'kshh@kshireheaven.in',
   phones: ['7075836434', '7981036434'],
   x: '@Kshhsipl',
-  officeLocation: 'Alt. F, Begumpet, Hyderabad, Telangana, India.',
-  mapsLink: 'https://maps.google.com/?q=Alt.+F,+Begumpet,+Hyderabad,+Telangana,+India',
-  registeredOffice: 'Plot No. 230 N/P, Sri Bhagya Nagar Colony, Hayathnagar, Hayathnagar, K.V. Rangareddy – 501505, Telangana, India.',
+  officeLocation: 'Hyderabad',
+  mapsLink: 'https://maps.google.com/?q=Hyderabad,+Telangana,+India',
   cin: 'U62020TS2026PTC225045',
-  incorporationDate: '28 October 2026',
+  incorporationDate: 'October 2026',
 };

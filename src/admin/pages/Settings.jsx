@@ -198,7 +198,7 @@ const Settings = () => {
                 </div>
                 <div>
                   <label style={{ display: 'block', marginBottom: '8px', fontWeight: 600, fontSize: '0.875rem' }}>
-                    Operational Office Location (Begumpet)
+                    Office Location
                   </label>
                   <div style={{ position: 'relative' }}>
                     <MapPin size={16} color="var(--text-muted)" style={{ position: 'absolute', left: '12px', top: '12px' }} />
@@ -206,7 +206,7 @@ const Settings = () => {
                       type="text"
                       value={formData.office_location || ''}
                       onChange={e => handleInputChange('office_location', e.target.value)}
-                      placeholder="Alt. F, Begumpet, Hyderabad, Telangana, India."
+                      placeholder="Hyderabad"
                       style={{ width: '100%', padding: '10px 10px 10px 36px', borderRadius: '8px', border: '1px solid var(--border-color)', boxSizing: 'border-box' }}
                     />
                   </div>
@@ -217,7 +217,7 @@ const Settings = () => {
                     type="url"
                     value={formData.maps_link || ''}
                     onChange={e => handleInputChange('maps_link', e.target.value)}
-                    placeholder="https://maps.google.com/?q=Alt.+F,+Begumpet,+Hyderabad,+Telangana,+India"
+                    placeholder="https://maps.google.com/?q=Hyderabad,+Telangana,+India"
                     style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid var(--border-color)', boxSizing: 'border-box' }}
                   />
                 </div>
@@ -259,22 +259,9 @@ const Settings = () => {
                     type="text"
                     value={formData.incorporation_date || ''}
                     onChange={e => handleInputChange('incorporation_date', e.target.value)}
-                    placeholder="28 October 2026"
+                    placeholder="October 2026"
                     style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid var(--border-color)', boxSizing: 'border-box' }}
                   />
-                </div>
-                <div>
-                  <label style={{ display: 'block', marginBottom: '8px', fontWeight: 600, fontSize: '0.875rem' }}>Registered Office Address</label>
-                  <textarea
-                    rows={3}
-                    value={formData.registered_address || ''}
-                    onChange={e => handleInputChange('registered_address', e.target.value)}
-                    placeholder="Plot No. 230 N/P, Sri Bhagya Nagar Colony, Hayathnagar, Hayathnagar, K.V. Rangareddy – 501505, Telangana, India."
-                    style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid var(--border-color)', boxSizing: 'border-box', resize: 'vertical' }}
-                  />
-                  <small style={{ color: 'var(--text-muted)', fontSize: '0.78rem' }}>
-                    Note: Kept distinct from the operational Begumpet office.
-                  </small>
                 </div>
               </div>
             </div>

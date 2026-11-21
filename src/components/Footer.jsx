@@ -163,7 +163,7 @@ export default function Footer() {
           )}
 
           {cms.office_location && (
-            <a href={cms.maps_link || "https://maps.google.com/?q=Alt.+F,+Begumpet,+Hyderabad,+Telangana,+India"} target="_blank" rel="noopener noreferrer" title="View Office on Google Maps">
+            <a href={cms.maps_link || "https://maps.google.com/?q=Hyderabad,+Telangana,+India"} target="_blank" rel="noopener noreferrer" title="View Office on Google Maps">
               <MapPin size={16} aria-hidden="true" />
               <span>{cms.office_location}</span>
               <ArrowUpRight size={13} aria-hidden="true" />
@@ -218,19 +218,7 @@ export default function Footer() {
           </div>
           <div className="legal-item">
             <span className="legal-label">Date of Incorporation:</span>
-            <span className="legal-value">{cms.incorporation_date || '28 October 2026'}</span>
-          </div>
-          <div className="legal-item legal-full-width">
-            <span className="legal-label">Registered Office Address:</span>
-            <span className="legal-value">{cms.registered_address || 'Plot No. 230 N/P, Sri Bhagya Nagar Colony, Hayathnagar, Hayathnagar, K.V. Rangareddy – 501505, Telangana, India.'}</span>
-          </div>
-          <div className="legal-item legal-full-width">
-            <span className="legal-label">Operational Office Location:</span>
-            <span className="legal-value">
-              <a href={cms.maps_link || "https://maps.google.com/?q=Alt.+F,+Begumpet,+Hyderabad,+Telangana,+India"} target="_blank" rel="noopener noreferrer" className="legal-map-link">
-                <MapPin size={13} /> {cms.office_location || 'Alt. F, Begumpet, Hyderabad, Telangana, India.'} <ArrowUpRight size={12} />
-              </a>
-            </span>
+            <span className="legal-value">{cms.incorporation_date || 'October 2026'}</span>
           </div>
         </div>
       </motion.div>

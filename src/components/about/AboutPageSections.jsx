@@ -2,7 +2,6 @@ import { motion, useReducedMotion } from 'framer-motion';
 import {
   ArrowDown,
   ArrowRight,
-  ArrowUpRight,
   Building2,
   ChartNoAxesCombined,
   Cloud,
@@ -12,7 +11,6 @@ import {
   Lightbulb,
   Linkedin,
   LockKeyhole,
-  MapPin,
   Rocket,
   ShieldCheck,
   Sparkles,
@@ -156,20 +154,6 @@ export function CompanyLegalInfo() {
           <div className="about-legal-item">
             <span className="about-legal-label">Official Contact Email</span>
             <strong className="about-legal-val"><a href={`mailto:${contact.email}`} className="legal-link">{contact.email}</a></strong>
-          </div>
-          <div className="about-legal-item about-legal-full">
-            <span className="about-legal-label">Registered Office Address</span>
-            <p className="about-legal-address">{company.registeredOffice}</p>
-          </div>
-          <div className="about-legal-item about-legal-full">
-            <span className="about-legal-label">Operational Office Location</span>
-            <p className="about-legal-address">
-              <a href={contact.mapsLink} target="_blank" rel="noopener noreferrer" className="legal-map-anchor">
-                <MapPin size={16} />
-                <span>{contact.officeLocation}</span>
-                <ArrowUpRight size={14} />
-              </a>
-            </p>
           </div>
         </div>
       </Reveal>
