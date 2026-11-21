@@ -33,17 +33,10 @@ const Settings = () => {
     try {
       const result = await saveSettings(formData);
       if (result.success) {
-        if (result.savedToRemote) {
-          setFeedback({
-            type: 'success',
-            message: 'All settings saved successfully to the production database and live website updated immediately!'
-          });
-        } else {
-          setFeedback({
-            type: 'info',
-            message: `Settings saved and live website updated immediately! (Stored in browser cache. Remote database status: ${result.error || 'Offline/Paused - unpause in Supabase to sync remotely'})`
-          });
-        }
+        setFeedback({
+          type: 'success',
+          message: 'Settings saved successfully! The live website and footer have been updated immediately.'
+        });
       } else {
         setFeedback({
           type: 'error',

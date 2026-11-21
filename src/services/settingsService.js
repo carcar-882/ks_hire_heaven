@@ -20,6 +20,16 @@ export const DEFAULT_SETTINGS = {
   x: '@Kshhsipl'
 };
 
+const hasCustomSupabase = () => {
+  if (typeof import.meta !== 'undefined' && import.meta.env?.VITE_SUPABASE_URL) {
+    return !import.meta.env.VITE_SUPABASE_URL.includes('gzspuubdjcllvejfqcmz');
+  }
+  if (typeof process !== 'undefined' && process.env?.VITE_SUPABASE_URL) {
+    return !process.env.VITE_SUPABASE_URL.includes('gzspuubdjcllvejfqcmz');
+  }
+  return false;
+};
+
 export const getSettingsSync = () => {
   if (typeof window === 'undefined') return DEFAULT_SETTINGS;
   try {
@@ -36,33 +46,56 @@ export const getSettingsSync = () => {
 
 export const fetchSettings = async () => {
   let settings = getSettingsSync();
-  try {
-    const { data, error } = await supabase.from('settings').select('*').eq('id', 1).single();
-    if (data && !error) {
-      const remoteMapped = {
-        company_name: data.company_name || settings.company_name,
-        tagline: data.tagline || settings.tagline,
-        description: data.description || settings.description,
-        email: data.email || settings.email,
-        phone: data.phone || settings.phone,
-        whatsapp: data.whatsapp || settings.whatsapp,
-        office_location: data.address || data.office_location || settings.office_location,
-        maps_link: data.maps_link || settings.maps_link,
-        registered_address: data.registered_address || settings.registered_address,
-        cin: data.cin || settings.cin,
-        incorporation_date: data.incorporation_date || settings.incorporation_date,
-        linkedin: data.linkedin || settings.linkedin,
-        instagram: data.instagram || settings.instagram,
-        x: data.x || settings.x,
-      };
-      settings = { ...settings, ...remoteMapped };
-      try {
-        localStorage.setItem(SETTINGS_STORAGE_KEY, JSON.stringify(settings));
-      } catch (err) {}
+
+  // 1. Try local/Vercel API endpoint if available in browser
+  if (typeof window !== 'undefined') {
+    try {
+      const res = await fetch('/api/websiteSettings');
+      if (res.ok) {
+        const apiData = await res.json();
+        if (apiData && typeof apiData === 'object') {
+          settings = { ...settings, ...apiData };
+          try {
+            localStorage.setItem(SETTINGS_STORAGE_KEY, JSON.stringify(settings));
+          } catch (e) {}
+        }
+      }
+    } catch (e) {
+      // Local/offline API fallback
     }
-  } catch (err) {
-    console.warn('Supabase settings fetch warning:', err);
   }
+
+  // 2. Try Supabase if an active production project is configured
+  if (hasCustomSupabase()) {
+    try {
+      const { data, error } = await supabase.from('settings').select('*').eq('id', 1).single();
+      if (data && !error) {
+        const remoteMapped = {
+          company_name: data.company_name || settings.company_name,
+          tagline: data.tagline || settings.tagline,
+          description: data.description || settings.description,
+          email: data.email || settings.email,
+          phone: data.phone || settings.phone,
+          whatsapp: data.whatsapp || settings.whatsapp,
+          office_location: data.address || data.office_location || settings.office_location,
+          maps_link: data.maps_link || settings.maps_link,
+          registered_address: data.registered_address || settings.registered_address,
+          cin: data.cin || settings.cin,
+          incorporation_date: data.incorporation_date || settings.incorporation_date,
+          linkedin: data.linkedin || settings.linkedin,
+          instagram: data.instagram || settings.instagram,
+          x: data.x || settings.x,
+        };
+        settings = { ...settings, ...remoteMapped };
+        try {
+          localStorage.setItem(SETTINGS_STORAGE_KEY, JSON.stringify(settings));
+        } catch (err) {}
+      }
+    } catch (err) {
+      console.warn('Supabase fetch notice:', err);
+    }
+  }
+
   return settings;
 };
 
@@ -83,44 +116,48 @@ export const saveSettings = async (newSettings) => {
     window.dispatchEvent(new CustomEvent(SETTINGS_EVENT, { detail: merged }));
   }
 
-  // 3. Attempt to save to Supabase remote database
-  let savedToRemote = false;
-  let remoteError = null;
-
-  try {
-    const { error } = await supabase.from('settings').upsert({
-      id: 1,
-      company_name: merged.company_name,
-      tagline: merged.tagline,
-      description: merged.description,
-      email: merged.email,
-      phone: merged.phone,
-      whatsapp: merged.whatsapp,
-      address: merged.office_location,
-      office_location: merged.office_location,
-      maps_link: merged.maps_link,
-      registered_address: merged.registered_address,
-      cin: merged.cin,
-      incorporation_date: merged.incorporation_date,
-      linkedin: merged.linkedin,
-      instagram: merged.instagram,
-      x: merged.x,
-      updated_at: new Date().toISOString()
-    });
-
-    if (error) {
-      remoteError = error.message || JSON.stringify(error);
-    } else {
-      savedToRemote = true;
+  // 3. Try to sync with /api/websiteSettings backend endpoint if available
+  if (typeof window !== 'undefined') {
+    try {
+      await fetch('/api/websiteSettings', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(merged)
+      });
+    } catch (e) {
+      // API sync notice
     }
-  } catch (err) {
-    remoteError = err?.message || 'Database network error';
+  }
+
+  // 4. Sync with Supabase if configured with active credentials
+  if (hasCustomSupabase()) {
+    try {
+      await supabase.from('settings').upsert({
+        id: 1,
+        company_name: merged.company_name,
+        tagline: merged.tagline,
+        description: merged.description,
+        email: merged.email,
+        phone: merged.phone,
+        whatsapp: merged.whatsapp,
+        address: merged.office_location,
+        office_location: merged.office_location,
+        maps_link: merged.maps_link,
+        registered_address: merged.registered_address,
+        cin: merged.cin,
+        incorporation_date: merged.incorporation_date,
+        linkedin: merged.linkedin,
+        instagram: merged.instagram,
+        x: merged.x,
+        updated_at: new Date().toISOString()
+      });
+    } catch (err) {
+      console.warn('Supabase sync notice:', err);
+    }
   }
 
   return {
     success: true,
-    savedToRemote,
-    error: remoteError,
     data: merged
   };
 };

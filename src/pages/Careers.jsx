@@ -23,7 +23,6 @@ import {
   Search,
   Server,
   Shield,
-  Sparkles,
   Users
 } from 'lucide-react';
 
@@ -301,56 +300,6 @@ export default function Careers() {
               <div className="pd-item">
                 <span className="pd-label">Technology</span>
                 <span className="pd-value">Microsoft Azure</span>
-              </div>
-            </div>
-          </Reveal>
-        </section>
-
-        {/* Dedicated Freshers Opportunity Section */}
-        <section id="freshers-opportunity" className="freshers-spotlight-section">
-          <Reveal className="freshers-spotlight-card">
-            <div className="freshero-badge">
-              <Sparkles size={15} />
-              <span>SPECIAL RECRUITMENT DRIVE</span>
-            </div>
-            <div className="freshero-content">
-              <h2>Freshers Opportunity</h2>
-              <p className="freshero-subtitle">Entry-level career opportunities at KS Hire Heaven</p>
-              
-              <div className="freshero-grid">
-                <div className="freshero-item">
-                  <span className="freshero-label">Eligible Candidates</span>
-                  <strong className="freshero-value">Freshers</strong>
-                </div>
-                <div className="freshero-item">
-                  <span className="freshero-label">Package</span>
-                  <strong className="freshero-value package-highlight">₹3.5 LPA – ₹4 LPA</strong>
-                </div>
-                <div className="freshero-item">
-                  <span className="freshero-label">Opportunity</span>
-                  <strong className="freshero-value">Entry-level career opportunities at KS Hire Heaven</strong>
-                </div>
-                <div className="freshero-item">
-                  <span className="freshero-label">Office Location</span>
-                  <strong className="freshero-value">Alt. F, Begumpet, Hyderabad, Telangana, India.</strong>
-                </div>
-              </div>
-
-              <div className="freshero-actions">
-                <button
-                  className="freshero-apply-btn"
-                  onClick={() => handleApply('Freshers Opportunity', 'freshers-opportunity')}
-                >
-                  <span>Apply Now</span>
-                  <ArrowRight size={18} />
-                </button>
-                <a
-                  href={`mailto:${careersEmail}?subject=Application%20for%20Freshers%20Opportunity%20-%20KS%20Hire%20Heaven`}
-                  className="freshero-email-btn"
-                >
-                  <Mail size={16} />
-                  <span>Apply via Email</span>
-                </a>
               </div>
             </div>
           </Reveal>
