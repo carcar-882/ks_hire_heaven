@@ -1,5 +1,6 @@
-import { useEffect, useState, useMemo } from 'react';
-import { supabase } from '../lib/supabase';
+import { useEffect, useState, useMemo, useCallback } from 'react';
+import { supabase, hasCustomSupabase } from '../lib/supabase';
+import { subscribeToJobsUpdates } from '../services/jobsSync';
 import { motion, useReducedMotion } from 'framer-motion';
 import HeroNavbar from '../components/HeroNavbar';
 import Footer from '../components/Footer';
@@ -53,97 +54,115 @@ export default function Careers() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const fetchJobs = async () => {
+  const fetchJobs = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
       let loadedJobs = [];
-      const { data, error: dbError } = await supabase
-        .from('jobs')
-        .select('*')
-        .eq('status', 'Published')
-        .is('archived_at', null);
-        
-      if (!dbError && data && data.length > 0) {
-        loadedJobs = [...data];
-      }
 
-      // Check admin localStorage jobs
+      // 1. PRIMARY SOURCE: Fetch directly from live /api/jobs with cache-busting
       try {
-        const localAdminJobs = localStorage.getItem('hireheaven_admin_jobs');
-        if (localAdminJobs) {
-          const parsedAdminJobs = JSON.parse(localAdminJobs);
-          if (Array.isArray(parsedAdminJobs) && parsedAdminJobs.length > 0) {
-            const localPublished = parsedAdminJobs.filter(j => j.status === 'Published' && !j.archived_at);
-            if (localPublished.length > 0) {
-              const existingIds = new Set(loadedJobs.map(j => j.id || j.job_id));
-              localPublished.forEach(j => {
-                if (!existingIds.has(j.id) && !existingIds.has(j.job_id)) {
-                  loadedJobs.unshift(j);
-                }
-              });
-            }
+        const res = await fetch(`/api/jobs?t=${Date.now()}`, {
+          cache: 'no-store',
+          headers: { 'Cache-Control': 'no-cache', 'Pragma': 'no-cache' }
+        });
+        if (res.ok) {
+          const apiData = await res.json();
+          if (Array.isArray(apiData) && apiData.length > 0) {
+            loadedJobs = apiData.filter(j => j.status === 'Published' && !j.archived_at);
           }
         }
-      } catch (e) {}
+      } catch (apiErr) {
+        console.warn("API jobs fetch notice:", apiErr);
+      }
 
-      if (loadedJobs.length > 0) {
-        // Ensure freshers opportunity is always represented
-        const hasFresher = loadedJobs.some(j => j.title?.toLowerCase().includes('fresher') || j.experience?.toLowerCase().includes('fresher'));
-        if (!hasFresher && staticJobs[0]) {
-          loadedJobs.unshift({
-            ...staticJobs[0],
-            job_id: staticJobs[0].id,
-            department: staticJobs[0].category || 'Early Careers / Freshers',
-            salary_min: '3.5',
-            salary_max: '4',
-            salary_currency: 'INR',
-            salary_period: 'LPA',
-            employment_type: 'Full Time',
-            required_skills: staticJobs[0].requiredSkills || [],
-            status: 'Published'
-          });
+      // 2. Secondary source: Supabase if configured with active credentials
+      if (loadedJobs.length === 0 && hasCustomSupabase()) {
+        try {
+          const { data, error: dbError } = await supabase
+            .from('jobs')
+            .select('*')
+            .eq('status', 'Published')
+            .is('archived_at', null);
+            
+          if (!dbError && data && data.length > 0) {
+            loadedJobs = [...data];
+          }
+        } catch (dbErr) {
+          console.warn("Supabase jobs fetch notice:", dbErr);
         }
-        setJobs(loadedJobs);
-      } else {
-        // Fallback to static jobs if DB is empty
-        const formattedStaticJobs = staticJobs.map(job => ({
+      }
+
+      // 3. Fallback: Shared/local storage cache
+      if (loadedJobs.length === 0) {
+        try {
+          const localAdminJobs = localStorage.getItem('hireheaven_admin_jobs');
+          if (localAdminJobs) {
+            const parsedAdminJobs = JSON.parse(localAdminJobs);
+            if (Array.isArray(parsedAdminJobs) && parsedAdminJobs.length > 0) {
+              loadedJobs = parsedAdminJobs.filter(j => j.status === 'Published' && !j.archived_at);
+            }
+          }
+        } catch (e) {}
+      }
+
+      // 4. Fallback to static seed only if database is completely empty
+      if (loadedJobs.length === 0) {
+        loadedJobs = staticJobs.map(job => ({
           ...job,
           job_id: job.id,
           department: job.category || 'Engineering',
-          salary_min: job.package?.match(/\d+(?:\.\d+)?/)?.[0] || '',
-          salary_max: job.package?.match(/\d+(?:\.\d+)?–(\d+(?:\.\d+)?)/)?.[1] || '',
+          salary_min: job.package?.match(/\d+(?:\.\d+)?/)?.[0] || '3.5',
+          salary_max: job.package?.match(/\d+(?:\.\d+)?–(\d+(?:\.\d+)?)/)?.[1] || '4',
           salary_currency: 'INR',
           salary_period: 'LPA',
           employment_type: 'Full Time',
           required_skills: job.requiredSkills || [],
           status: 'Published'
         }));
-        setJobs(formattedStaticJobs);
       }
+
+      // Normalize all active jobs for consistent UI rendering
+      const formattedJobs = loadedJobs.map((job, idx) => ({
+        ...job,
+        id: job.id || job.job_id || `job-${idx + 1}`,
+        job_id: job.job_id || job.id || `job-${idx + 1}`,
+        title: job.title || 'Untitled Role',
+        department: job.department || job.category || 'Engineering',
+        location: job.location || 'Hyderabad',
+        salary_currency: job.salary_currency || 'INR',
+        salary_period: job.salary_period || 'LPA',
+        employment_type: job.employment_type || 'Full Time',
+        package: job.package || (job.salary_min ? `₹${job.salary_min}–${job.salary_max} ${job.salary_period || 'LPA'}` : 'Competitive'),
+        responsibilities: Array.isArray(job.responsibilities) ? job.responsibilities : [],
+        required_skills: Array.isArray(job.required_skills)
+          ? job.required_skills
+          : Array.isArray(job.requiredSkills)
+            ? job.requiredSkills
+            : Array.isArray(job.technologies)
+              ? job.technologies
+              : []
+      }));
+
+      setJobs(formattedJobs);
     } catch (err) {
       console.error("Error fetching jobs from DB, falling back:", err);
-      const formattedStaticJobs = staticJobs.map(job => ({
-        ...job,
-        job_id: job.id,
-        department: job.category || 'Engineering',
-        salary_min: job.package?.match(/\d+(?:\.\d+)?/)?.[0] || '',
-        salary_max: job.package?.match(/\d+(?:\.\d+)?–(\d+(?:\.\d+)?)/)?.[1] || '',
-        salary_currency: 'INR',
-        salary_period: 'LPA',
-        employment_type: 'Full Time',
-        required_skills: job.requiredSkills || [],
-        status: 'Published'
-      }));
-      setJobs(formattedStaticJobs);
+      setError("Failed to load active job openings.");
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
     fetchJobs();
-  }, []);
+
+    // Real-time synchronization subscription
+    const unsubscribe = subscribeToJobsUpdates(() => {
+      fetchJobs();
+    });
+
+    return unsubscribe;
+  }, [fetchJobs]);
 
   useEffect(() => {
     const previousTitle = document.title;

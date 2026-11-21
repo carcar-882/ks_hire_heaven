@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { supabase } from '../lib/supabase';
+import { supabase, hasCustomSupabase } from '../lib/supabase';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, CheckCircle, AlertCircle, Loader2 } from 'lucide-react';
 import { careersEmail } from '../data/jobs';
@@ -119,103 +119,105 @@ export default function ApplicationModal({ isOpen, onClose, initialRole, jobId }
     
     try {
       let resume_url = null;
-      let resume_name = null;
+      let resume_name = resume ? resume.name : null;
       
-      if (resume) {
-        const fileExt = resume.name.split('.').pop();
-        const fileName = `${Date.now()}_${Math.random().toString(36).substring(7)}.${fileExt}`;
-        
-        const { data: uploadData, error: uploadError } = await supabase.storage
-          .from('resumes')
-          .upload(fileName, resume);
+      if (resume && hasCustomSupabase()) {
+        try {
+          const fileExt = resume.name.split('.').pop();
+          const fileName = `${Date.now()}_${Math.random().toString(36).substring(7)}.${fileExt}`;
           
-        if (uploadError) {
-          console.error('Resume upload error:', uploadError);
-          setDbErrorMsg(`Resume Upload Failed: ${uploadError.message}`);
-          setSubmitState('error');
-          return;
+          const { error: uploadError } = await supabase.storage
+            .from('resumes')
+            .upload(fileName, resume);
+            
+          if (!uploadError) {
+            const { data: { publicUrl } } = supabase.storage.from('resumes').getPublicUrl(fileName);
+            resume_url = publicUrl;
+          }
+        } catch (uploadErr) {
+          console.warn('Resume storage notice:', uploadErr);
         }
-        
-        const { data: { publicUrl } } = supabase.storage.from('resumes').getPublicUrl(fileName);
-        resume_url = publicUrl;
-        resume_name = resume.name;
       }
+
+      const generatedAppNumber = 'KSHH-' + Math.floor(100000 + Math.random() * 900000);
 
       const payload = {
-          name: formData.name,
-          phone: formData.phone,
-          email: formData.email,
-          role: formData.role,
-          experience: formData.experience,
-          location: formData.location,
-          currentctc: formData.currentCTC,
-          expectedctc: formData.expectedCTC,
-          noticeperiod: formData.noticePeriod,
-          message: formData.message,
-          job_id: jobId === 'general-application' ? null : jobId,
-          status: 'New',
-          resume_url: resume_url,
-          resume_name: resume_name
-      };
-      
-      console.log('SUBMITTING PAYLOAD:', payload);
-
-      const { data, error } = await supabase
-        .from('applications')
-        .insert([payload])
-        .select()
-        .single();
-      
-      if (error) {
-        console.warn('Supabase application insert failed, saving locally:', error);
-        // Fallback to local storage so candidate application is never lost
-        const localApp = {
-          ...payload,
-          id: 'app_' + Date.now(),
-          application_number: 'KSHH-' + Math.floor(100000 + Math.random() * 900000),
-          created_at: new Date().toISOString()
-        };
-        try {
-          const prev = JSON.parse(localStorage.getItem('hireheaven_local_applications') || '[]');
-          prev.unshift(localApp);
-          localStorage.setItem('hireheaven_local_applications', JSON.stringify(prev));
-          setApplicationId(localApp.id);
-          setApplicationNumber(localApp.application_number);
-          setSubmitState('success');
-          return;
-        } catch (e) {
-          console.error(e);
-        }
-        setDbErrorMsg(`DB Error: ${error.message} (Code: ${error.code})`);
-        setSubmitState('error');
-        return;
-      }
-
-      if (!data) {
-        throw new Error('Application was not saved');
-      }
-      
-      setApplicationId(data.id);
-      setApplicationNumber(data.application_number);
-      setSubmitState('success');
-
-    } catch(err) {
-      console.warn('Network exception during submit, preserving locally:', err);
-      const localApp = {
-        ...payload,
-        id: 'app_' + Date.now(),
-        application_number: 'KSHH-' + Math.floor(100000 + Math.random() * 900000),
+        name: formData.name,
+        phone: formData.phone,
+        email: formData.email,
+        role: formData.role,
+        experience: formData.experience,
+        location: formData.location,
+        currentctc: formData.currentCTC,
+        expectedctc: formData.expectedCTC,
+        noticeperiod: formData.noticePeriod,
+        message: formData.message,
+        job_id: jobId === 'general-application' ? null : jobId,
+        status: 'New',
+        application_number: generatedAppNumber,
+        resume_url: resume_url,
+        resume_name: resume_name,
         created_at: new Date().toISOString()
       };
+
+      let savedSuccess = false;
+      let finalAppId = 'app_' + Date.now();
+      let finalAppNumber = generatedAppNumber;
+
+      // 1. Post to live backend API (/api/applications)
+      try {
+        const res = await fetch('/api/applications', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        if (res.ok) {
+          const savedData = await res.json();
+          if (savedData && savedData.id) {
+            finalAppId = savedData.id;
+            if (savedData.application_number) finalAppNumber = savedData.application_number;
+            savedSuccess = true;
+          }
+        }
+      } catch (apiErr) {
+        console.warn('API /api/applications error:', apiErr);
+      }
+
+      // 2. Dual-save to Supabase if configured with active credentials
+      if (hasCustomSupabase()) {
+        try {
+          const { data, error } = await supabase
+            .from('applications')
+            .insert([payload])
+            .select()
+            .single();
+          if (!error && data) {
+            finalAppId = data.id || finalAppId;
+            finalAppNumber = data.application_number || finalAppNumber;
+            savedSuccess = true;
+          }
+        } catch (e) {}
+      }
+
+      // 3. Fallback to localStorage backup
       try {
         const prev = JSON.parse(localStorage.getItem('hireheaven_local_applications') || '[]');
-        prev.unshift(localApp);
+        prev.unshift({ ...payload, id: finalAppId, application_number: finalAppNumber });
         localStorage.setItem('hireheaven_local_applications', JSON.stringify(prev));
-        setApplicationId(localApp.id);
-        setApplicationNumber(localApp.application_number);
-        setSubmitState('success');
-        return;
+        savedSuccess = true;
       } catch (e) {}
+
+      if (savedSuccess) {
+        setApplicationId(finalAppId);
+        setApplicationNumber(finalAppNumber);
+        setSubmitState('success');
+      } else {
+        setDbErrorMsg('Unable to record application. Please email your resume to kshh@kshireheaven.in.');
+        setSubmitState('error');
+      }
+    } catch(err) {
+      console.warn('Submission notice:', err);
+      setDbErrorMsg('An error occurred while submitting. Please try again or email kshh@kshireheaven.in.');
       setSubmitState('error');
     }
   };

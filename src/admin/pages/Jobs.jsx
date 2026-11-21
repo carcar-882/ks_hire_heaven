@@ -19,6 +19,7 @@ const DEFAULT_JOB = {
 const Jobs = () => {
   const { jobs, addJob, updateJob, deleteJob } = useAdmin();
   const [searchTerm, setSearchTerm] = useState('');
+  const [feedback, setFeedback] = useState(null);
   
   // Modals state: 'list', 'create', 'edit', 'view'
   const [viewState, setViewState] = useState('list');
@@ -92,8 +93,10 @@ const Jobs = () => {
       jobData.job_id = `JOB-${Math.floor(Math.random() * 900) + 100}`;
       jobData.created_at = new Date().toISOString();
       await addJob(jobData);
+      setFeedback({ type: 'success', message: 'New job opening created and synchronized to the live website!' });
     } else if (viewState === 'edit') {
       await updateJob(currentJob.id, jobData);
+      setFeedback({ type: 'success', message: 'Job details updated successfully and synchronized to the live website!' });
     }
     
     setViewState('list');
@@ -103,16 +106,19 @@ const Jobs = () => {
   const handleDeleteJob = async (id) => {
     if (window.confirm("Are you sure you want to delete this job? If applications exist, it is recommended to archive it instead.")) {
       await deleteJob(id);
+      setFeedback({ type: 'info', message: 'Job opening permanently removed from database and public website.' });
     }
   };
   
   const handleArchiveJob = async (job) => {
     await updateJob(job.id, { ...job, archived_at: new Date().toISOString(), status: 'Archived' });
+    setFeedback({ type: 'info', message: 'Job archived. It will no longer appear on the public Careers page.' });
   };
 
   const handleUnarchiveJob = async (job) => {
     const { archived_at, ...restJob } = job;
     await updateJob(job.id, { ...restJob, status: 'Draft' });
+    setFeedback({ type: 'info', message: 'Job restored to Drafts.' });
   };
 
   // Stats
@@ -299,6 +305,29 @@ const Jobs = () => {
           </button>
         </div>
       </div>
+
+      {feedback && (
+        <div style={{
+          padding: '12px 18px',
+          marginBottom: '20px',
+          borderRadius: '8px',
+          backgroundColor: feedback.type === 'success' ? '#e8f5e9' : '#e0f2fe',
+          color: feedback.type === 'success' ? '#1b5e20' : '#0369a1',
+          border: `1px solid ${feedback.type === 'success' ? '#a5d6a7' : '#bae6fd'}`,
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          fontWeight: 500
+        }}>
+          <span>{feedback.message}</span>
+          <button
+            onClick={() => setFeedback(null)}
+            style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '1.2rem', color: 'inherit', padding: '0 4px' }}
+          >
+            ×
+          </button>
+        </div>
+      )}
 
       <div className="kpi-grid">
         <div className="kpi-card">

@@ -4,6 +4,11 @@ const env = (typeof import.meta !== 'undefined' && import.meta.env)
   ? import.meta.env
   : (typeof process !== 'undefined' && process.env) ? process.env : {};
 
+export const hasCustomSupabase = () => {
+  const url = env.VITE_SUPABASE_URL || '';
+  return !!url && !url.includes('gzspuubdjcllvejfqcmz');
+};
+
 const supabaseUrl = env.VITE_SUPABASE_URL || 'https://gzspuubdjcllvejfqcmz.supabase.co';
 const supabaseKey = env.VITE_SUPABASE_ANON_KEY || 'sb_publishable_iIOpVIjwNhrVF4Bdw1LI8A_Ai4LN1Xp';
 

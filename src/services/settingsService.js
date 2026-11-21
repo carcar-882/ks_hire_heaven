@@ -60,7 +60,10 @@ export const fetchSettings = async () => {
   // 1. Try local/Vercel API endpoint if available in browser
   if (typeof window !== 'undefined') {
     try {
-      const res = await fetch('/api/websiteSettings');
+      const res = await fetch(`/api/websiteSettings?t=${Date.now()}`, {
+        cache: 'no-store',
+        headers: { 'Cache-Control': 'no-cache', 'Pragma': 'no-cache' }
+      });
       if (res.ok) {
         const apiData = await res.json();
         if (apiData && typeof apiData === 'object') {
