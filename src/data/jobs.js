@@ -1,6 +1,37 @@
-export const careersEmail = "ks.hireheavensoftwareindia@gmail.com";
+export const careersEmail = "kshh@kshireheaven.in";
 
 export const jobs = [
+  {
+    id: 'freshers-opportunity',
+    title: 'Freshers Opportunity',
+    experience: 'Freshers',
+    package: '₹3.5 LPA – ₹4 LPA',
+    location: 'Alt. F, Begumpet, Hyderabad, Telangana, India.',
+    project: 'Enterprise Cloud & Digital Solutions',
+    projectTenure: 'Full Time',
+    badge: 'FRESHERS RECRUITMENT',
+    shortDescription: 'Entry-level career opportunities at KS Hire Heaven. Open to motivated fresh graduates passionate about cloud technologies, software development, and digital transformation.',
+    category: 'Early Careers / Freshers',
+    technologies: ['Cloud Fundamentals', 'Azure', 'Programming Basics', 'Problem Solving'],
+    responsibilities: [
+      'Participate in enterprise cloud enablement and IT solution delivery.',
+      'Assist cloud engineers in deploying, configuring, and monitoring Azure workloads.',
+      'Learn cloud automation, Infrastructure as Code, and DevOps practices.',
+      'Collaborate with senior architects and developers to build high-quality solutions.',
+      'Undergo structured hands-on training and mentorship in cloud and enterprise technologies.'
+    ],
+    requiredSkills: [
+      'Eligible Candidates: Freshers (BE, B.Tech, MCA, B.Sc or related fields)',
+      'Basic programming knowledge in any language (Python, Java, C#, or JavaScript)',
+      'Understanding of basic computer networking and database concepts',
+      'Strong logical, analytical, and problem-solving skills',
+      'Effective communication and team-player mindset'
+    ],
+    preferredSkills: [
+      'Familiarity with Microsoft Azure fundamentals (AZ-900 or equivalent)',
+      'Academic project or internship experience in software or cloud development'
+    ]
+  },
   {
     id: 'azure-architect',
     title: 'Azure Architect',

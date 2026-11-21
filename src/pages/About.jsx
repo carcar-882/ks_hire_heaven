@@ -11,6 +11,7 @@ import {
   CloudJourney,
   CompanyOverview,
   CompanySnapshot,
+  CompanyLegalInfo,
   TeamSection,
   VisionMission,
   WhyChooseUs,
@@ -41,6 +42,7 @@ export default function About() {
         <AboutHero />
         <CompanyOverview />
         <CompanySnapshot />
+        <CompanyLegalInfo />
         <VisionMission />
         <CloudApproach />
         <CloudExpertise />

@@ -53,7 +53,7 @@ export default function HomeFaq() {
           <h2 id="home-faq-title">Questions we get <span>asked most.</span></h2>
           <p>If you don’t see your question here, contact us directly to discuss your cloud requirements.</p>
           <motion.a
-            href="mailto:ks.hireheavensoftwareindia@gmail.com"
+            href="mailto:kshh@kshireheaven.in"
             className="home-faq-contact"
             whileHover={reduceMotion ? undefined : { scale: 1.05, y: -2 }}
             whileTap={reduceMotion ? undefined : { scale: 0.97 }}

@@ -1,10 +1,16 @@
 export const company = {
-  name: 'KS Hire Heaven Software India Pvt Ltd.',
+  name: 'KS HIRE HEAVEN SOFTWARE INDIA PRIVATE LIMITED',
+  shortName: 'KS Hire Heaven Software India Pvt Ltd',
   tagline: 'Cloud Solutions. Digital Innovation. Business Growth.',
-  about: 'KS Hire Heaven Software India Pvt Ltd is an emerging IT and cloud technology company focused on helping businesses adopt, manage, and optimize modern cloud infrastructure. The company provides cloud-based technology solutions primarily across Microsoft Azure, along with Amazon Web Services (AWS) and Google Cloud Platform (GCP).',
+  about: 'KS HIRE HEAVEN SOFTWARE INDIA PRIVATE LIMITED is an emerging IT and cloud technology company focused on helping businesses adopt, manage, and optimize modern cloud infrastructure. The company provides cloud-based technology solutions primarily across Microsoft Azure, along with Amazon Web Services (AWS) and Google Cloud Platform (GCP).',
   goal: 'Our goal is to help start-ups, small and medium-sized businesses, and enterprises improve scalability, security, reliability, and operational efficiency through practical cloud solutions.',
   vision: 'To become a trusted cloud technology partner for businesses by delivering secure, scalable, and innovative digital solutions.',
   mission: 'To simplify cloud adoption and help organizations leverage Azure, AWS, and GCP technologies to build efficient, secure, and scalable digital environments.',
+  cin: 'U62020TS2026PTC225045',
+  incorporationDate: '28 October 2026',
+  registeredOffice: 'Plot No. 230 N/P, Sri Bhagya Nagar Colony, Hayathnagar, Hayathnagar, K.V. Rangareddy – 501505, Telangana, India.',
+  officeLocation: 'Alt. F, Begumpet, Hyderabad, Telangana, India.',
+  mapsLink: 'https://maps.google.com/?q=Alt.+F,+Begumpet,+Hyderabad,+Telangana,+India',
 };
 
 export const snapshots = [
@@ -12,6 +18,8 @@ export const snapshots = [
   { label: 'Multi-cloud', value: 'Azure · AWS · GCP' },
   { label: 'Focus', value: 'Cloud & IT Services' },
   { label: 'Customer focus', value: 'Startups · SMBs · Enterprises' },
+  { label: 'CIN', value: 'U62020TS2026PTC225045' },
+  { label: 'Operational Office', value: 'Alt. F, Begumpet, Hyderabad' },
 ];
 
 export const expertise = [
@@ -80,7 +88,12 @@ export const teamMembers = [
 ];
 
 export const contact = {
-  email: 'ks.hireheavensoftwareindia@gmail.com',
+  email: 'kshh@kshireheaven.in',
   phones: ['7075836434', '7981036434'],
   x: '@Kshhsipl',
+  officeLocation: 'Alt. F, Begumpet, Hyderabad, Telangana, India.',
+  mapsLink: 'https://maps.google.com/?q=Alt.+F,+Begumpet,+Hyderabad,+Telangana,+India',
+  registeredOffice: 'Plot No. 230 N/P, Sri Bhagya Nagar Colony, Hayathnagar, Hayathnagar, K.V. Rangareddy – 501505, Telangana, India.',
+  cin: 'U62020TS2026PTC225045',
+  incorporationDate: '28 October 2026',
 };

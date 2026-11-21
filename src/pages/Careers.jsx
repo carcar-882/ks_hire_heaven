@@ -8,6 +8,7 @@ import { careersEmail, jobs as staticJobs } from '../data/jobs';
 import '../components/Hero.css';
 import '../styles/careers/careers.css';
 import {
+  ArrowRight,
   Briefcase,
   ChevronRight,
   Cloud,
@@ -15,12 +16,14 @@ import {
   Database,
   Globe2,
   LineChart,
+  Mail,
   MapPin,
   Network,
   Rocket,
   Search,
   Server,
   Shield,
+  Sparkles,
   Users
 } from 'lucide-react';
 
@@ -55,24 +58,62 @@ export default function Careers() {
     setLoading(true);
     setError(null);
     try {
+      let loadedJobs = [];
       const { data, error: dbError } = await supabase
         .from('jobs')
         .select('*')
         .eq('status', 'Published')
         .is('archived_at', null);
         
-      if (dbError) throw dbError;
-      
-      if (data && data.length > 0) {
-        setJobs(data);
+      if (!dbError && data && data.length > 0) {
+        loadedJobs = [...data];
+      }
+
+      // Check admin localStorage jobs
+      try {
+        const localAdminJobs = localStorage.getItem('hireheaven_admin_jobs');
+        if (localAdminJobs) {
+          const parsedAdminJobs = JSON.parse(localAdminJobs);
+          if (Array.isArray(parsedAdminJobs) && parsedAdminJobs.length > 0) {
+            const localPublished = parsedAdminJobs.filter(j => j.status === 'Published' && !j.archived_at);
+            if (localPublished.length > 0) {
+              const existingIds = new Set(loadedJobs.map(j => j.id || j.job_id));
+              localPublished.forEach(j => {
+                if (!existingIds.has(j.id) && !existingIds.has(j.job_id)) {
+                  loadedJobs.unshift(j);
+                }
+              });
+            }
+          }
+        }
+      } catch (e) {}
+
+      if (loadedJobs.length > 0) {
+        // Ensure freshers opportunity is always represented
+        const hasFresher = loadedJobs.some(j => j.title?.toLowerCase().includes('fresher') || j.experience?.toLowerCase().includes('fresher'));
+        if (!hasFresher && staticJobs[0]) {
+          loadedJobs.unshift({
+            ...staticJobs[0],
+            job_id: staticJobs[0].id,
+            department: staticJobs[0].category || 'Early Careers / Freshers',
+            salary_min: '3.5',
+            salary_max: '4',
+            salary_currency: 'INR',
+            salary_period: 'LPA',
+            employment_type: 'Full Time',
+            required_skills: staticJobs[0].requiredSkills || [],
+            status: 'Published'
+          });
+        }
+        setJobs(loadedJobs);
       } else {
         // Fallback to static jobs if DB is empty
         const formattedStaticJobs = staticJobs.map(job => ({
           ...job,
           job_id: job.id,
           department: job.category || 'Engineering',
-          salary_min: job.package?.match(/\d+/)?.[0] || '',
-          salary_max: job.package?.match(/\d+–(\d+)/)?.[1] || '',
+          salary_min: job.package?.match(/\d+(?:\.\d+)?/)?.[0] || '',
+          salary_max: job.package?.match(/\d+(?:\.\d+)?–(\d+(?:\.\d+)?)/)?.[1] || '',
           salary_currency: 'INR',
           salary_period: 'LPA',
           employment_type: 'Full Time',
@@ -87,8 +128,8 @@ export default function Careers() {
         ...job,
         job_id: job.id,
         department: job.category || 'Engineering',
-        salary_min: job.package?.match(/\d+/)?.[0] || '',
-        salary_max: job.package?.match(/\d+–(\d+)/)?.[1] || '',
+        salary_min: job.package?.match(/\d+(?:\.\d+)?/)?.[0] || '',
+        salary_max: job.package?.match(/\d+(?:\.\d+)?–(\d+(?:\.\d+)?)/)?.[1] || '',
         salary_currency: 'INR',
         salary_period: 'LPA',
         employment_type: 'Full Time',
@@ -107,7 +148,7 @@ export default function Careers() {
 
   useEffect(() => {
     const previousTitle = document.title;
-    document.title = 'Careers at KS Hire Heaven | Azure Cloud Jobs Hyderabad';
+    document.title = 'Careers at KS Hire Heaven | Cloud Jobs Hyderabad';
     window.scrollTo(0, 0);
     return () => { document.title = previousTitle; };
   }, []);
@@ -121,6 +162,7 @@ export default function Careers() {
 
   const experienceLevels = [
     'All Experience',
+    'Freshers',
     '3–5 Years',
     '5–8 Years',
     '8–10 Years',
@@ -140,7 +182,8 @@ export default function Careers() {
       let matchExp = true;
       if (activeExperience !== 'All Experience' && job.experience) {
         const expLower = job.experience.toLowerCase();
-        if (activeExperience === '3–5 Years') matchExp = expLower.includes('3') || expLower.includes('4') || expLower.includes('5');
+        if (activeExperience === 'Freshers') matchExp = expLower.includes('fresher') || expLower.includes('entry') || expLower.includes('0');
+        else if (activeExperience === '3–5 Years') matchExp = expLower.includes('3') || expLower.includes('4') || expLower.includes('5');
         else if (activeExperience === '5–8 Years') matchExp = expLower.includes('5') || expLower.includes('6') || expLower.includes('7') || expLower.includes('8');
         else if (activeExperience === '8–10 Years') matchExp = expLower.includes('8') || expLower.includes('9') || expLower.includes('10');
         else if (activeExperience === '10+ Years') matchExp = expLower.includes('10') || expLower.includes('15');
@@ -182,15 +225,15 @@ export default function Careers() {
               
               <div className="careers-stats">
                 <div className="stat-item">
-                  <span className="stat-value">3–15 Yrs</span>
+                  <span className="stat-value">Freshers – 15 Yrs</span>
                   <span className="stat-label">Experience</span>
                 </div>
                 <div className="stat-item">
-                  <span className="stat-value">₹7–15 LPA</span>
+                  <span className="stat-value">₹3.5–15 LPA</span>
                   <span className="stat-label">Package Range</span>
                 </div>
                 <div className="stat-item">
-                  <span className="stat-value">Hyderabad</span>
+                  <span className="stat-value">Begumpet, Hyderabad</span>
                   <span className="stat-label">Location</span>
                 </div>
                 <div className="stat-item">
@@ -253,11 +296,61 @@ export default function Careers() {
               </div>
               <div className="pd-item">
                 <span className="pd-label">Location</span>
-                <span className="pd-value">Hyderabad</span>
+                <span className="pd-value">Alt. F, Begumpet, Hyderabad</span>
               </div>
               <div className="pd-item">
                 <span className="pd-label">Technology</span>
                 <span className="pd-value">Microsoft Azure</span>
+              </div>
+            </div>
+          </Reveal>
+        </section>
+
+        {/* Dedicated Freshers Opportunity Section */}
+        <section id="freshers-opportunity" className="freshers-spotlight-section">
+          <Reveal className="freshers-spotlight-card">
+            <div className="freshero-badge">
+              <Sparkles size={15} />
+              <span>SPECIAL RECRUITMENT DRIVE</span>
+            </div>
+            <div className="freshero-content">
+              <h2>Freshers Opportunity</h2>
+              <p className="freshero-subtitle">Entry-level career opportunities at KS Hire Heaven</p>
+              
+              <div className="freshero-grid">
+                <div className="freshero-item">
+                  <span className="freshero-label">Eligible Candidates</span>
+                  <strong className="freshero-value">Freshers</strong>
+                </div>
+                <div className="freshero-item">
+                  <span className="freshero-label">Package</span>
+                  <strong className="freshero-value package-highlight">₹3.5 LPA – ₹4 LPA</strong>
+                </div>
+                <div className="freshero-item">
+                  <span className="freshero-label">Opportunity</span>
+                  <strong className="freshero-value">Entry-level career opportunities at KS Hire Heaven</strong>
+                </div>
+                <div className="freshero-item">
+                  <span className="freshero-label">Office Location</span>
+                  <strong className="freshero-value">Alt. F, Begumpet, Hyderabad, Telangana, India.</strong>
+                </div>
+              </div>
+
+              <div className="freshero-actions">
+                <button
+                  className="freshero-apply-btn"
+                  onClick={() => handleApply('Freshers Opportunity', 'freshers-opportunity')}
+                >
+                  <span>Apply Now</span>
+                  <ArrowRight size={18} />
+                </button>
+                <a
+                  href={`mailto:${careersEmail}?subject=Application%20for%20Freshers%20Opportunity%20-%20KS%20Hire%20Heaven`}
+                  className="freshero-email-btn"
+                >
+                  <Mail size={16} />
+                  <span>Apply via Email</span>
+                </a>
               </div>
             </div>
           </Reveal>

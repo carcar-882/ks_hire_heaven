@@ -5,7 +5,7 @@ import { ArrowRight, ChevronDown, Menu, Search, X } from 'lucide-react';
 import DropdownMenu from './DropdownMenu';
 import brandLogo from '../assets/logo.png';
 
-const contactHref = 'mailto:?subject=Cloud%20solutions%20enquiry%20-%20KS%20Hire%20Heaven';
+const contactHref = 'mailto:kshh@kshireheaven.in?subject=Cloud%20solutions%20enquiry%20-%20KS%20Hire%20Heaven';
 
 const navigationItems = [
   { label: 'Home', href: '/', hash: 'home' },

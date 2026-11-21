@@ -2,6 +2,8 @@ import { motion, useReducedMotion } from 'framer-motion';
 import {
   ArrowDown,
   ArrowRight,
+  ArrowUpRight,
+  Building2,
   ChartNoAxesCombined,
   Cloud,
   CloudCog,
@@ -10,6 +12,7 @@ import {
   Lightbulb,
   Linkedin,
   LockKeyhole,
+  MapPin,
   Rocket,
   ShieldCheck,
   Sparkles,
@@ -120,6 +123,60 @@ export function CompanySnapshot() {
   );
 }
 
+export function CompanyLegalInfo() {
+  return (
+    <section id="legal-information" className="about-legal-section">
+      <SectionHeading
+        number="02"
+        label="LEGAL &amp; CORPORATE DETAILS"
+        title={<>Official Company Information<br /><span>Govt. Registered Entity</span></>}
+        lead="KS HIRE HEAVEN SOFTWARE INDIA PRIVATE LIMITED is officially registered under the Companies Act, 2013 (Ministry of Corporate Affairs, Government of India)."
+      />
+      <Reveal className="about-legal-card">
+        <div className="about-legal-header">
+          <div className="about-legal-title">
+            <Building2 size={20} className="legal-title-icon" />
+            <span>Corporate Identity &amp; Registration</span>
+          </div>
+          <span className="legal-verified-pill"><ShieldCheck size={14} /> Ministry of Corporate Affairs</span>
+        </div>
+        <div className="about-legal-grid">
+          <div className="about-legal-item">
+            <span className="about-legal-label">Company Name</span>
+            <strong className="about-legal-val">{company.name}</strong>
+          </div>
+          <div className="about-legal-item">
+            <span className="about-legal-label">Corporate Identity Number (CIN)</span>
+            <strong className="about-legal-val code-font">{company.cin}</strong>
+          </div>
+          <div className="about-legal-item">
+            <span className="about-legal-label">Date of Incorporation</span>
+            <strong className="about-legal-val">{company.incorporationDate}</strong>
+          </div>
+          <div className="about-legal-item">
+            <span className="about-legal-label">Official Contact Email</span>
+            <strong className="about-legal-val"><a href={`mailto:${contact.email}`} className="legal-link">{contact.email}</a></strong>
+          </div>
+          <div className="about-legal-item about-legal-full">
+            <span className="about-legal-label">Registered Office Address</span>
+            <p className="about-legal-address">{company.registeredOffice}</p>
+          </div>
+          <div className="about-legal-item about-legal-full">
+            <span className="about-legal-label">Operational Office Location</span>
+            <p className="about-legal-address">
+              <a href={contact.mapsLink} target="_blank" rel="noopener noreferrer" className="legal-map-anchor">
+                <MapPin size={16} />
+                <span>{contact.officeLocation}</span>
+                <ArrowUpRight size={14} />
+              </a>
+            </p>
+          </div>
+        </div>
+      </Reveal>
+    </section>
+  );
+}
+
 export function VisionMission() {
   const cards = [
     { number: '01', name: 'VISION', text: company.vision, Icon: Compass, theme: 'vision' },
@@ -127,7 +184,7 @@ export function VisionMission() {
   ];
   return (
     <section className="about-vision-section">
-      <SectionHeading number="02" label="VISION & MISSION" title={<>Where we’re going.<br /><span>How we’re getting there.</span></>} />
+      <SectionHeading number="03" label="VISION & MISSION" title={<>Where we’re going.<br /><span>How we’re getting there.</span></>} />
       <div className="about-vision-grid">
         {cards.map(({ number, name, text, Icon, theme }, index) => (
           <Reveal hover hoverY={-8} hoverScale={1.02} className={`about-vision-card about-vision-${theme}`} key={number} delay={index * 0.1}>
@@ -152,7 +209,7 @@ export function CloudApproach() {
   const reduceMotion = useReducedMotion();
   return (
     <section id="cloud-approach" className="about-approach-section">
-      <SectionHeading number="03" label="WHAT WE DO" title="From cloud adoption to continuous optimization." lead="We help businesses navigate cloud complexity with practical technology solutions across infrastructure, migration, security, DevOps, monitoring, and technical consulting." />
+      <SectionHeading number="04" label="WHAT WE DO" title="From cloud adoption to continuous optimization." lead="We help businesses navigate cloud complexity with practical technology solutions across infrastructure, migration, security, DevOps, monitoring, and technical consulting." />
       <div className="about-approach-flow">
         <motion.span className="about-approach-line" aria-hidden="true" initial={{ scaleX: 0 }} whileInView={{ scaleX: 1 }} viewport={{ once: true, amount: 0.3 }} transition={{ duration: reduceMotion ? 0.2 : 0.9, ease: 'easeOut' }} />
         {stages.map(({ title, description, Icon }, index) => (

@@ -23,7 +23,8 @@ const Login = () => {
 
   const handleLogin = (e) => {
     e.preventDefault();
-    if (email === 'ks.hireheavensoftwareindia@gmail.com' && password === 'Hireheaven@2026##') {
+    const validEmails = ['kshh@kshireheaven.in', 'ks.hireheavensoftwareindia@gmail.com'];
+    if (validEmails.includes(email.trim().toLowerCase()) && password === 'Hireheaven@2026##') {
       login();
       navigate('/admin/dashboard');
     } else {

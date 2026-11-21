@@ -2,7 +2,7 @@ import { motion, useReducedMotion } from 'framer-motion';
 import { ArrowRight, Cloud, ShieldCheck, ChartNoAxesCombined, Settings2, Lightbulb } from 'lucide-react';
 import HeroBenefits from './HeroBenefits';
 
-const contactHref = 'mailto:?subject=Cloud%20solutions%20enquiry%20-%20KS%20Hire%20Heaven';
+const contactHref = 'mailto:kshh@kshireheaven.in?subject=Cloud%20solutions%20enquiry%20-%20KS%20Hire%20Heaven';
 
 export default function HeroContent({ benefits }) {
   const reduceMotion = useReducedMotion();
