@@ -1,4 +1,4 @@
-import { supabase } from '../lib/supabase.js';
+import { supabase, hasCustomSupabase } from '../lib/supabase.js';
 
 const SETTINGS_STORAGE_KEY = 'hireheaven_website_settings';
 const SETTINGS_EVENT = 'website-settings-updated';
@@ -17,16 +17,6 @@ export const DEFAULT_SETTINGS = {
   linkedin: 'https://linkedin.com/company/hireheaven',
   instagram: 'https://instagram.com/hireheaven',
   x: '@Kshhsipl'
-};
-
-const hasCustomSupabase = () => {
-  if (typeof import.meta !== 'undefined' && import.meta.env?.VITE_SUPABASE_URL) {
-    return !import.meta.env.VITE_SUPABASE_URL.includes('gzspuubdjcllvejfqcmz');
-  }
-  if (typeof process !== 'undefined' && process.env?.VITE_SUPABASE_URL) {
-    return !process.env.VITE_SUPABASE_URL.includes('gzspuubdjcllvejfqcmz');
-  }
-  return false;
 };
 
 export const getSettingsSync = () => {
@@ -57,12 +47,12 @@ export const getSettingsSync = () => {
 export const fetchSettings = async () => {
   let settings = getSettingsSync();
 
-  // 1. Try local/Vercel API endpoint if available in browser
+  // 1. Try local/Vercel API endpoint as the primary remote database source of truth
   if (typeof window !== 'undefined') {
     try {
       const res = await fetch(`/api/websiteSettings?t=${Date.now()}`, {
         cache: 'no-store',
-        headers: { 'Cache-Control': 'no-cache', 'Pragma': 'no-cache' }
+        headers: { 'Cache-Control': 'no-cache, no-store', 'Pragma': 'no-cache' }
       });
       if (res.ok) {
         const apiData = await res.json();
@@ -74,7 +64,7 @@ export const fetchSettings = async () => {
             apiData.incorporation_date = '2026';
           }
           delete apiData.registered_address;
-          settings = { ...settings, ...apiData };
+          settings = { ...DEFAULT_SETTINGS, ...settings, ...apiData };
           try {
             localStorage.setItem(SETTINGS_STORAGE_KEY, JSON.stringify(settings));
           } catch (e) {}
@@ -118,70 +108,149 @@ export const fetchSettings = async () => {
   return settings;
 };
 
-export const saveSettings = async (newSettings) => {
-  const merged = { ...getSettingsSync(), ...newSettings };
+export const saveSettings = async (newSettings, options = {}) => {
+  const current = getSettingsSync();
+  const merged = { ...current, ...newSettings };
   delete merged.registered_address;
   if (merged.office_location && (merged.office_location.includes('Begumpet') || merged.office_location.includes('Alt. F'))) {
     merged.office_location = 'Hyderabad';
   }
-  
-  // 1. Persist locally first so changes are immediate & durable
-  if (typeof localStorage !== 'undefined') {
-    try {
-      localStorage.setItem(SETTINGS_STORAGE_KEY, JSON.stringify(merged));
-    } catch (err) {
-      console.error('Failed to write to localStorage:', err);
-    }
+  if (merged.incorporation_date && (merged.incorporation_date.includes('October') || merged.incorporation_date.includes('28'))) {
+    merged.incorporation_date = '2026';
   }
 
-  // 2. Dispatch event for real-time live synchronization in this and other components
-  if (typeof window !== 'undefined') {
-    window.dispatchEvent(new CustomEvent(SETTINGS_EVENT, { detail: merged }));
-  }
+  let remoteSuccess = false;
+  let remoteError = null;
+  let confirmedData = { ...merged };
 
-  // 3. Try to sync with /api/websiteSettings backend endpoint if available
+  // 1. Send the updated settings to the central remote database endpoint (/api/websiteSettings)
   if (typeof window !== 'undefined') {
     try {
-      await fetch('/api/websiteSettings', {
+      const res = await fetch('/api/websiteSettings', {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'Cache-Control': 'no-cache, no-store'
+        },
         body: JSON.stringify(merged)
       });
-    } catch (e) {
-      // API sync notice
+
+      if (res.ok) {
+        const json = await res.json();
+        if (json && typeof json === 'object') {
+          confirmedData = { ...confirmedData, ...json };
+        }
+        remoteSuccess = true;
+      } else {
+        // Fallback attempt with POST
+        const postRes = await fetch('/api/websiteSettings', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Cache-Control': 'no-cache, no-store'
+          },
+          body: JSON.stringify(merged)
+        });
+        if (postRes.ok) {
+          const json = await postRes.json();
+          if (json && typeof json === 'object') {
+            confirmedData = { ...confirmedData, ...json };
+          }
+          remoteSuccess = true;
+        } else {
+          remoteError = `Backend error ${res.status}`;
+        }
+      }
+    } catch (err) {
+      remoteError = err?.message || 'Network request failed';
     }
   }
 
-  // 4. Sync with Supabase if configured with active credentials
+  // 2. Also synchronize with Supabase if a valid custom production database is connected
   if (hasCustomSupabase()) {
     try {
-      await supabase.from('settings').upsert({
+      const { data, error } = await supabase.from('settings').upsert({
         id: 1,
-        company_name: merged.company_name,
-        tagline: merged.tagline,
-        description: merged.description,
-        email: merged.email,
-        phone: merged.phone,
-        whatsapp: merged.whatsapp,
-        address: merged.office_location,
-        office_location: merged.office_location,
-        maps_link: merged.maps_link,
-        cin: merged.cin,
-        incorporation_date: merged.incorporation_date,
-        linkedin: merged.linkedin,
-        instagram: merged.instagram,
-        x: merged.x,
+        company_name: confirmedData.company_name,
+        tagline: confirmedData.tagline,
+        description: confirmedData.description,
+        email: confirmedData.email,
+        phone: confirmedData.phone,
+        whatsapp: confirmedData.whatsapp,
+        address: confirmedData.office_location,
+        office_location: confirmedData.office_location,
+        maps_link: confirmedData.maps_link,
+        cin: confirmedData.cin,
+        incorporation_date: confirmedData.incorporation_date,
+        linkedin: confirmedData.linkedin,
+        instagram: confirmedData.instagram,
+        x: confirmedData.x,
         updated_at: new Date().toISOString()
-      });
+      }).select().single();
+
+      if (!error) {
+        remoteSuccess = true;
+        if (data) {
+          confirmedData = { ...confirmedData, ...data };
+        }
+      } else if (!remoteSuccess) {
+        remoteError = error.message;
+      }
     } catch (err) {
-      console.warn('Supabase sync notice:', err);
+      if (!remoteSuccess) {
+        remoteError = err?.message || 'Remote database error';
+      }
     }
   }
 
-  return {
-    success: true,
-    data: merged
-  };
+  // 3. Evaluate persistence: Remote database persistence must be the source of truth
+  if (remoteSuccess) {
+    // Persist to local cache only AFTER remote database confirms persistence
+    if (typeof localStorage !== 'undefined') {
+      try {
+        localStorage.setItem(SETTINGS_STORAGE_KEY, JSON.stringify(confirmedData));
+      } catch (err) {
+        console.error('Failed to write to localStorage:', err);
+      }
+    }
+
+    // Dispatch event for instant multi-component reactivity
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent(SETTINGS_EVENT, { detail: confirmedData }));
+    }
+
+    return {
+      success: true,
+      remoteSynced: true,
+      localOnly: false,
+      data: confirmedData,
+      message: 'Settings saved successfully! Remote database synchronized and live website updated.'
+    };
+  } else {
+    // Remote database save failed - do NOT treat localStorage as success
+    if (options && options.allowLocalFallback) {
+      if (typeof localStorage !== 'undefined') {
+        try {
+          localStorage.setItem(SETTINGS_STORAGE_KEY, JSON.stringify(merged));
+        } catch (err) {}
+      }
+      return {
+        success: false,
+        remoteSynced: false,
+        localOnly: true,
+        error: remoteError,
+        message: 'Changes saved locally but not synchronized with the server.'
+      };
+    }
+
+    return {
+      success: false,
+      remoteSynced: false,
+      localOnly: false,
+      error: remoteError,
+      message: 'Unable to synchronize settings with the remote database. Please check your connection and try again.'
+    };
+  }
 };
 
 export const subscribeToSettings = (callback) => {

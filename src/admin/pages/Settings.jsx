@@ -32,22 +32,27 @@ const Settings = () => {
     setFeedback(null);
     try {
       const result = await saveSettings(formData);
-      if (result.success) {
+      if (result && result.success && result.remoteSynced) {
         setFeedback({
           type: 'success',
-          message: 'Settings saved successfully! The live website and footer have been updated immediately.'
+          message: 'Settings saved successfully! Remote database synchronized and live website updated.'
+        });
+      } else if (result && result.localOnly) {
+        setFeedback({
+          type: 'warning',
+          message: 'Changes saved locally but not synchronized with the server.'
         });
       } else {
         setFeedback({
           type: 'error',
-          message: 'Failed to save settings: ' + (result.error || 'Unknown error')
+          message: 'Unable to synchronize settings with the remote database. Please check your connection and try again.'
         });
       }
     } catch (error) {
       console.error('Error saving settings:', error);
       setFeedback({
         type: 'error',
-        message: 'Error saving settings: ' + (error?.message || error)
+        message: 'Unable to synchronize settings with the remote database. Please check your connection and try again.'
       });
     } finally {
       setSaving(false);
@@ -79,12 +84,12 @@ const Settings = () => {
           alignItems: 'center',
           gap: '12px',
           fontSize: '0.9rem',
-          backgroundColor: feedback.type === 'success' ? '#e8f5e9' : feedback.type === 'info' ? '#e0f2fe' : '#fef2f2',
-          border: `1px solid ${feedback.type === 'success' ? '#a5d6a7' : feedback.type === 'info' ? '#bae6fd' : '#fecaca'}`,
-          color: feedback.type === 'success' ? '#1b5e20' : feedback.type === 'info' ? '#0369a1' : '#991b1b'
+          backgroundColor: feedback.type === 'success' ? '#e8f5e9' : feedback.type === 'warning' ? '#fffbeb' : feedback.type === 'info' ? '#e0f2fe' : '#fef2f2',
+          border: `1px solid ${feedback.type === 'success' ? '#a5d6a7' : feedback.type === 'warning' ? '#fde68a' : feedback.type === 'info' ? '#bae6fd' : '#fecaca'}`,
+          color: feedback.type === 'success' ? '#1b5e20' : feedback.type === 'warning' ? '#b45309' : feedback.type === 'info' ? '#0369a1' : '#991b1b'
         }}>
-          {feedback.type === 'success' ? <CheckCircle2 size={18} /> : feedback.type === 'info' ? <CheckCircle2 size={18} /> : <AlertTriangle size={18} />}
-          <span>{feedback.message}</span>
+          {feedback.type === 'success' ? <CheckCircle2 size={18} /> : <AlertTriangle size={18} />}
+          <span style={{ fontWeight: 500 }}>{feedback.message}</span>
         </div>
       )}
 
