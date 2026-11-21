@@ -7,7 +7,7 @@ export const company = {
   vision: 'To become a trusted cloud technology partner for businesses by delivering secure, scalable, and innovative digital solutions.',
   mission: 'To simplify cloud adoption and help organizations leverage Azure, AWS, and GCP technologies to build efficient, secure, and scalable digital environments.',
   cin: 'U62020TS2026PTC225045',
-  incorporationDate: 'October 2026',
+  incorporationDate: '2026',
   officeLocation: 'Hyderabad',
   mapsLink: 'https://maps.google.com/?q=Hyderabad,+Telangana,+India',
 };
@@ -93,5 +93,5 @@ export const contact = {
   officeLocation: 'Hyderabad',
   mapsLink: 'https://maps.google.com/?q=Hyderabad,+Telangana,+India',
   cin: 'U62020TS2026PTC225045',
-  incorporationDate: 'October 2026',
+  incorporationDate: '2026',
 };

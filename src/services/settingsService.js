@@ -13,7 +13,7 @@ export const DEFAULT_SETTINGS = {
   office_location: 'Hyderabad',
   maps_link: 'https://maps.google.com/?q=Hyderabad,+Telangana,+India',
   cin: 'U62020TS2026PTC225045',
-  incorporation_date: 'October 2026',
+  incorporation_date: '2026',
   linkedin: 'https://linkedin.com/company/hireheaven',
   instagram: 'https://instagram.com/hireheaven',
   x: '@Kshhsipl'
@@ -42,8 +42,8 @@ export const getSettingsSync = () => {
       if (parsed.maps_link && parsed.maps_link.includes('Begumpet')) {
         parsed.maps_link = 'https://maps.google.com/?q=Hyderabad,+Telangana,+India';
       }
-      if (parsed.incorporation_date && parsed.incorporation_date.includes('28 October')) {
-        parsed.incorporation_date = 'October 2026';
+      if (parsed.incorporation_date && (parsed.incorporation_date.includes('October') || parsed.incorporation_date.includes('28'))) {
+        parsed.incorporation_date = '2026';
       }
       delete parsed.registered_address;
       return { ...DEFAULT_SETTINGS, ...parsed };
@@ -67,8 +67,8 @@ export const fetchSettings = async () => {
           if (apiData.office_location && (apiData.office_location.includes('Begumpet') || apiData.office_location.includes('Alt. F'))) {
             apiData.office_location = 'Hyderabad';
           }
-          if (apiData.incorporation_date && apiData.incorporation_date.includes('28 October')) {
-            apiData.incorporation_date = 'October 2026';
+          if (apiData.incorporation_date && (apiData.incorporation_date.includes('October') || apiData.incorporation_date.includes('28'))) {
+            apiData.incorporation_date = '2026';
           }
           delete apiData.registered_address;
           settings = { ...settings, ...apiData };

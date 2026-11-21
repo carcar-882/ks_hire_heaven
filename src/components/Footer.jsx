@@ -218,7 +218,7 @@ export default function Footer() {
           </div>
           <div className="legal-item">
             <span className="legal-label">Date of Incorporation:</span>
-            <span className="legal-value">{cms.incorporation_date || 'October 2026'}</span>
+            <span className="legal-value">{cms.incorporation_date || '2026'}</span>
           </div>
         </div>
       </motion.div>

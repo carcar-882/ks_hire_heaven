@@ -259,7 +259,7 @@ const Settings = () => {
                     type="text"
                     value={formData.incorporation_date || ''}
                     onChange={e => handleInputChange('incorporation_date', e.target.value)}
-                    placeholder="October 2026"
+                    placeholder="2026"
                     style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid var(--border-color)', boxSizing: 'border-box' }}
                   />
                 </div>
