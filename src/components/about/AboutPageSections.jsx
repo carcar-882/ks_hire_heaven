@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 import {
   ArrowDown,
@@ -18,6 +19,7 @@ import {
   UsersRound,
 } from 'lucide-react';
 import cloudArtwork from '../../../473e6bde-b299-414d-abad-953a1c297678.png';
+import { getSettingsSync, fetchSettings, subscribeSettings } from '../../services/settingsService';
 import {
   cloudJourney,
   company,
@@ -122,13 +124,29 @@ export function CompanySnapshot() {
 }
 
 export function CompanyLegalInfo() {
+  const [cms, setCms] = useState(() => getSettingsSync());
+
+  useEffect(() => {
+    let isMounted = true;
+    fetchSettings().then((updated) => {
+      if (isMounted && updated) setCms(updated);
+    });
+    const unsubscribe = subscribeSettings((updated) => {
+      if (isMounted && updated) setCms(updated);
+    });
+    return () => {
+      isMounted = false;
+      unsubscribe();
+    };
+  }, []);
+
   return (
     <section id="legal-information" className="about-legal-section">
       <SectionHeading
         number="02"
         label="LEGAL &amp; CORPORATE DETAILS"
         title={<>Official Company Information<br /><span>Govt. Registered Entity</span></>}
-        lead="KS HIRE HEAVEN SOFTWARE INDIA PRIVATE LIMITED is officially registered under the Companies Act, 2013 (Ministry of Corporate Affairs, Government of India)."
+        lead={`${cms.company_name || company.name} is officially registered under the Companies Act, 2013 (Ministry of Corporate Affairs, Government of India).`}
       />
       <Reveal className="about-legal-card">
         <div className="about-legal-header">
@@ -141,19 +159,19 @@ export function CompanyLegalInfo() {
         <div className="about-legal-grid">
           <div className="about-legal-item">
             <span className="about-legal-label">Company Name</span>
-            <strong className="about-legal-val">{company.name}</strong>
+            <strong className="about-legal-val">{cms.company_name || company.name}</strong>
           </div>
           <div className="about-legal-item">
             <span className="about-legal-label">Corporate Identity Number (CIN)</span>
-            <strong className="about-legal-val code-font">{company.cin}</strong>
+            <strong className="about-legal-val code-font">{cms.cin || company.cin}</strong>
           </div>
           <div className="about-legal-item">
             <span className="about-legal-label">Date of Incorporation</span>
-            <strong className="about-legal-val">{company.incorporationDate}</strong>
+            <strong className="about-legal-val">{cms.incorporation_date || company.incorporationDate}</strong>
           </div>
           <div className="about-legal-item">
             <span className="about-legal-label">Official Contact Email</span>
-            <strong className="about-legal-val"><a href={`mailto:${contact.email}`} className="legal-link">{contact.email}</a></strong>
+            <strong className="about-legal-val"><a href={`mailto:${cms.email || contact.email}`} className="legal-link">{cms.email || contact.email}</a></strong>
           </div>
         </div>
       </Reveal>

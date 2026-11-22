@@ -2,6 +2,7 @@ import { supabase, hasCustomSupabase } from '../lib/supabase.js';
 
 const SETTINGS_STORAGE_KEY = 'hireheaven_website_settings';
 const SETTINGS_EVENT = 'website-settings-updated';
+const SETTINGS_CHANNEL_NAME = 'ks_settings_sync_channel';
 
 export const DEFAULT_SETTINGS = {
   company_name: 'KS HIRE HEAVEN SOFTWARE INDIA PRIVATE LIMITED',
@@ -10,8 +11,8 @@ export const DEFAULT_SETTINGS = {
   email: 'kshh@kshireheaven.in',
   phone: '7075836434',
   whatsapp: '7981036434',
-  office_location: 'Hyderabad',
-  maps_link: 'https://maps.google.com/?q=Hyderabad,+Telangana,+India',
+  office_location: 'Alt. F Begumpet',
+  maps_link: 'https://maps.app.goo.gl/XfTbnEiJX9VfJzMD9',
   cin: 'U62020TS2026PTC225045',
   incorporation_date: '2026',
   linkedin: 'https://linkedin.com/company/hireheaven',
@@ -25,17 +26,17 @@ export const getSettingsSync = () => {
     const local = localStorage.getItem(SETTINGS_STORAGE_KEY);
     if (local) {
       const parsed = JSON.parse(local);
-      // Cleanse outdated cached values
-      if (parsed.office_location && (parsed.office_location.includes('Begumpet') || parsed.office_location.includes('Alt. F'))) {
-        parsed.office_location = 'Hyderabad';
+      delete parsed.registered_address;
+      // Upgrade stale cached defaults if they point to the old generic placeholders
+      if (parsed.office_location === 'Hyderabad') {
+        parsed.office_location = 'Alt. F Begumpet';
       }
-      if (parsed.maps_link && parsed.maps_link.includes('Begumpet')) {
-        parsed.maps_link = 'https://maps.google.com/?q=Hyderabad,+Telangana,+India';
+      if (!parsed.maps_link || parsed.maps_link.includes('maps.google.com/?q=Hyderabad')) {
+        parsed.maps_link = 'https://maps.app.goo.gl/XfTbnEiJX9VfJzMD9';
       }
       if (parsed.incorporation_date && (parsed.incorporation_date.includes('October') || parsed.incorporation_date.includes('28'))) {
         parsed.incorporation_date = '2026';
       }
-      delete parsed.registered_address;
       return { ...DEFAULT_SETTINGS, ...parsed };
     }
   } catch (e) {
@@ -57,13 +58,16 @@ export const fetchSettings = async () => {
       if (res.ok) {
         const apiData = await res.json();
         if (apiData && typeof apiData === 'object') {
-          if (apiData.office_location && (apiData.office_location.includes('Begumpet') || apiData.office_location.includes('Alt. F'))) {
-            apiData.office_location = 'Hyderabad';
+          delete apiData.registered_address;
+          if (apiData.office_location === 'Hyderabad') {
+            apiData.office_location = 'Alt. F Begumpet';
+          }
+          if (!apiData.maps_link || apiData.maps_link.includes('maps.google.com/?q=Hyderabad')) {
+            apiData.maps_link = 'https://maps.app.goo.gl/XfTbnEiJX9VfJzMD9';
           }
           if (apiData.incorporation_date && (apiData.incorporation_date.includes('October') || apiData.incorporation_date.includes('28'))) {
             apiData.incorporation_date = '2026';
           }
-          delete apiData.registered_address;
           settings = { ...DEFAULT_SETTINGS, ...settings, ...apiData };
           try {
             localStorage.setItem(SETTINGS_STORAGE_KEY, JSON.stringify(settings));
@@ -87,7 +91,7 @@ export const fetchSettings = async () => {
           email: data.email || settings.email,
           phone: data.phone || settings.phone,
           whatsapp: data.whatsapp || settings.whatsapp,
-          office_location: (data.address || data.office_location || settings.office_location || '').includes('Begumpet') ? 'Hyderabad' : (data.address || data.office_location || settings.office_location),
+          office_location: data.address || data.office_location || settings.office_location,
           maps_link: data.maps_link || settings.maps_link,
           cin: data.cin || settings.cin,
           incorporation_date: data.incorporation_date || settings.incorporation_date,
@@ -108,13 +112,31 @@ export const fetchSettings = async () => {
   return settings;
 };
 
+export const notifySettingsUpdated = (data) => {
+  if (typeof window === 'undefined') return;
+
+  // 1. BroadcastChannel for cross-tab synchronization
+  try {
+    const channel = new BroadcastChannel(SETTINGS_CHANNEL_NAME);
+    channel.postMessage({ timestamp: Date.now(), data });
+    channel.close();
+  } catch (e) {}
+
+  // 2. CustomEvent for within-page synchronization
+  try {
+    window.dispatchEvent(new CustomEvent(SETTINGS_EVENT, { detail: data }));
+  } catch (e) {}
+
+  // 3. Storage timestamp for cross-window notification
+  try {
+    localStorage.setItem('hireheaven_settings_last_updated', Date.now().toString());
+  } catch (e) {}
+};
+
 export const saveSettings = async (newSettings, options = {}) => {
   const current = getSettingsSync();
   const merged = { ...current, ...newSettings };
   delete merged.registered_address;
-  if (merged.office_location && (merged.office_location.includes('Begumpet') || merged.office_location.includes('Alt. F'))) {
-    merged.office_location = 'Hyderabad';
-  }
   if (merged.incorporation_date && (merged.incorporation_date.includes('October') || merged.incorporation_date.includes('28'))) {
     merged.incorporation_date = '2026';
   }
@@ -214,10 +236,8 @@ export const saveSettings = async (newSettings, options = {}) => {
       }
     }
 
-    // Dispatch event for instant multi-component reactivity
-    if (typeof window !== 'undefined') {
-      window.dispatchEvent(new CustomEvent(SETTINGS_EVENT, { detail: confirmedData }));
-    }
+    // Dispatch events across all components, tabs and windows
+    notifySettingsUpdated(confirmedData);
 
     return {
       success: true,
@@ -256,6 +276,18 @@ export const saveSettings = async (newSettings, options = {}) => {
 export const subscribeToSettings = (callback) => {
   if (typeof window === 'undefined') return () => {};
   
+  let channel = null;
+  try {
+    channel = new BroadcastChannel(SETTINGS_CHANNEL_NAME);
+    channel.onmessage = (event) => {
+      if (event?.data?.data) {
+        callback(event.data.data);
+      } else {
+        fetchSettings().then(callback);
+      }
+    };
+  } catch (e) {}
+
   const handleCustomEvent = (e) => {
     callback(e.detail);
   };
@@ -265,15 +297,34 @@ export const subscribeToSettings = (callback) => {
       try {
         callback(JSON.parse(e.newValue));
       } catch (err) {}
+    } else if (e.key === 'hireheaven_settings_last_updated') {
+      fetchSettings().then(callback);
+    }
+  };
+
+  const handleFocus = () => {
+    fetchSettings().then(callback);
+  };
+
+  const handleVisibilityChange = () => {
+    if (document.visibilityState === 'visible') {
+      fetchSettings().then(callback);
     }
   };
 
   window.addEventListener(SETTINGS_EVENT, handleCustomEvent);
   window.addEventListener('storage', handleStorageEvent);
+  window.addEventListener('focus', handleFocus);
+  document.addEventListener('visibilitychange', handleVisibilityChange);
 
   return () => {
+    if (channel) {
+      try { channel.close(); } catch (e) {}
+    }
     window.removeEventListener(SETTINGS_EVENT, handleCustomEvent);
     window.removeEventListener('storage', handleStorageEvent);
+    window.removeEventListener('focus', handleFocus);
+    document.removeEventListener('visibilitychange', handleVisibilityChange);
   };
 };
 

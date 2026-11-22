@@ -33,6 +33,9 @@ const Settings = () => {
     try {
       const result = await saveSettings(formData);
       if (result && result.success && result.remoteSynced) {
+        if (result.data) {
+          setFormData(result.data);
+        }
         setFeedback({
           type: 'success',
           message: 'Settings saved successfully! Remote database synchronized and live website updated.'
@@ -211,7 +214,7 @@ const Settings = () => {
                       type="text"
                       value={formData.office_location || ''}
                       onChange={e => handleInputChange('office_location', e.target.value)}
-                      placeholder="Hyderabad"
+                      placeholder="Alt. F Begumpet"
                       style={{ width: '100%', padding: '10px 10px 10px 36px', borderRadius: '8px', border: '1px solid var(--border-color)', boxSizing: 'border-box' }}
                     />
                   </div>
@@ -222,7 +225,7 @@ const Settings = () => {
                     type="url"
                     value={formData.maps_link || ''}
                     onChange={e => handleInputChange('maps_link', e.target.value)}
-                    placeholder="https://maps.google.com/?q=Hyderabad,+Telangana,+India"
+                    placeholder="https://maps.app.goo.gl/XfTbnEiJX9VfJzMD9"
                     style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid var(--border-color)', boxSizing: 'border-box' }}
                   />
                 </div>

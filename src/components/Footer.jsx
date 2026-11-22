@@ -162,13 +162,11 @@ export default function Footer() {
             </a>
           )}
 
-          {cms.office_location && (
-            <a href={cms.maps_link || "https://maps.google.com/?q=Hyderabad,+Telangana,+India"} target="_blank" rel="noopener noreferrer" title="View Office on Google Maps">
-              <MapPin size={16} aria-hidden="true" />
-              <span>{cms.office_location}</span>
-              <ArrowUpRight size={13} aria-hidden="true" />
-            </a>
-          )}
+          <a href={cms.maps_link || "https://maps.app.goo.gl/XfTbnEiJX9VfJzMD9"} target="_blank" rel="noopener noreferrer" title="View Office on Google Maps">
+            <MapPin size={16} aria-hidden="true" />
+            <span>{cms.office_location || 'Alt. F Begumpet'}</span>
+            <ArrowUpRight size={13} aria-hidden="true" />
+          </a>
 
           {cms.x && (
             <a href="https://x.com/Kshhsipl" target="_blank" rel="noopener noreferrer" title="Follow us on X">
