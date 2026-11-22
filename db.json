@@ -507,16 +507,22 @@
     "company_name": "KS HIRE HEAVEN SOFTWARE INDIA PRIVATE LIMITED",
     "tagline": "Cloud Solutions. Digital Innovation. Business Growth.",
     "description": "KS HIRE HEAVEN SOFTWARE INDIA PRIVATE LIMITED is an emerging technology company focused on cloud solutions, digital transformation, Azure infrastructure, data, DevOps, analytics, and business technology.",
-    "phone": "7075836434",
+    "phone": "70758364341",
+    "primaryPhone": "70758364341",
     "whatsapp": "7981036434",
+    "whatsappNumber": "7981036434",
     "email": "kshh@kshireheaven.in",
+    "supportEmail": "kshh@kshireheaven.in",
     "address": "Alt. F Begumpet",
     "office_location": "Alt. F Begumpet",
     "cin": "U62020TS2026PTC225045",
     "incorporation_date": "2026",
+    "incorporationDate": "2026",
     "maps_link": "https://maps.app.goo.gl/XfTbnEiJX9VfJzMD9",
+    "mapsLink": "https://maps.app.goo.gl/XfTbnEiJX9VfJzMD9",
     "linkedin": "https://linkedin.com/company/hireheaven",
     "instagram": "https://instagram.com/hireheaven",
-    "x": "@Kshhsipl"
+    "x": "@Kshhsipl",
+    "updated_at": "2026-11-22T09:30:00.000Z"
   }
 }

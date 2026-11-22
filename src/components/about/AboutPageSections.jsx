@@ -167,11 +167,11 @@ export function CompanyLegalInfo() {
           </div>
           <div className="about-legal-item">
             <span className="about-legal-label">Date of Incorporation</span>
-            <strong className="about-legal-val">{cms.incorporation_date || company.incorporationDate}</strong>
+            <strong className="about-legal-val">{cms.incorporation_date || cms.incorporationDate || company.incorporationDate}</strong>
           </div>
           <div className="about-legal-item">
             <span className="about-legal-label">Official Contact Email</span>
-            <strong className="about-legal-val"><a href={`mailto:${cms.email || contact.email}`} className="legal-link">{cms.email || contact.email}</a></strong>
+            <strong className="about-legal-val"><a href={`mailto:${cms.email || cms.supportEmail || contact.email}`} className="legal-link">{cms.email || cms.supportEmail || contact.email}</a></strong>
           </div>
         </div>
       </Reveal>

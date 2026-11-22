@@ -37,11 +37,12 @@ server.use(cors({
   credentials: true
 }));
 
-// Ensure Vercel and browsers never cache dynamic API responses
+// Ensure Vercel, proxies and browsers never cache dynamic API responses
 server.use((req, res, next) => {
-  res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+  res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0');
   res.setHeader('Pragma', 'no-cache');
   res.setHeader('Expires', '0');
+  res.setHeader('Surrogate-Control', 'no-store');
   next();
 });
 
@@ -50,9 +51,59 @@ server.use(middlewares);
 
 const router = jsonServer.router(activeDbPath);
 
-// Handle websiteSettings explicitly for guaranteed reliability
+// Normalization helper for websiteSettings
+const normalizeSettingsPayload = (current = {}, incoming = {}) => {
+  const merged = { ...current, ...incoming };
+  
+  // Resolve primary phone
+  const phone = incoming.phone !== undefined 
+    ? incoming.phone 
+    : (incoming.primaryPhone !== undefined ? incoming.primaryPhone : merged.phone);
+
+  // Resolve email
+  const email = incoming.email !== undefined 
+    ? incoming.email 
+    : (incoming.supportEmail !== undefined ? incoming.supportEmail : (incoming.companyEmail !== undefined ? incoming.companyEmail : merged.email));
+
+  // Resolve office location
+  const office_location = incoming.office_location !== undefined 
+    ? incoming.office_location 
+    : (incoming.address !== undefined ? incoming.address : (incoming.officeLocation !== undefined ? incoming.officeLocation : merged.office_location));
+
+  // Resolve whatsapp
+  const whatsapp = incoming.whatsapp !== undefined 
+    ? incoming.whatsapp 
+    : (incoming.whatsappNumber !== undefined ? incoming.whatsappNumber : merged.whatsapp);
+
+  // Resolve maps link
+  const maps_link = incoming.maps_link !== undefined 
+    ? incoming.maps_link 
+    : (incoming.mapsLink !== undefined ? incoming.mapsLink : merged.maps_link);
+
+  return {
+    ...merged,
+    phone,
+    primaryPhone: phone,
+    email,
+    supportEmail: email,
+    companyEmail: email,
+    office_location,
+    address: office_location,
+    officeLocation: office_location,
+    whatsapp,
+    whatsappNumber: whatsapp,
+    maps_link,
+    mapsLink: maps_link,
+    updated_at: new Date().toISOString()
+  };
+};
+
+// Handle websiteSettings explicitly for guaranteed persistence and reliability
 const handleGetSettings = (req, res) => {
   try {
+    if (typeof router.db.read === 'function') {
+      router.db.read();
+    }
     const settings = router.db.get('websiteSettings').value() || {};
     res.json(settings);
   } catch (err) {
@@ -62,12 +113,25 @@ const handleGetSettings = (req, res) => {
 
 const handlePutSettings = (req, res) => {
   try {
+    if (typeof router.db.read === 'function') {
+      router.db.read();
+    }
     const current = router.db.get('websiteSettings').value() || {};
-    const updated = { ...current, ...req.body };
+    const updated = normalizeSettingsPayload(current, req.body);
+    
     router.db.set('websiteSettings', updated).write();
+
+    // Ensure synchronous file write to activeDbPath
+    try {
+      const fullState = router.db.getState();
+      fs.writeFileSync(activeDbPath, JSON.stringify(fullState, null, 2), 'utf8');
+    } catch (fsErr) {
+      console.warn('Direct file sync notice:', fsErr?.message);
+    }
+
     res.json(updated);
   } catch (err) {
-    res.status(500).json({ error: 'Failed to save settings' });
+    res.status(500).json({ error: 'Failed to save settings: ' + (err?.message || err) });
   }
 };
 

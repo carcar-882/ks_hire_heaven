@@ -91,7 +91,7 @@ export default function Footer() {
         </div>
         <motion.a
           className="hero-primary-cta site-footer-cta-button"
-          href={`mailto:${cms.email}?subject=Cloud%20solutions%20enquiry%20-%20KS%20Hire%20Heaven`}
+          href={`mailto:${cms.email || cms.supportEmail}?subject=Cloud%20solutions%20enquiry%20-%20KS%20Hire%20Heaven`}
           whileHover={reduceMotion ? undefined : { scale: 1.05, y: -2 }}
           whileTap={reduceMotion ? undefined : { scale: 0.97 }}
           transition={{ type: 'spring', stiffness: 450, damping: 20 }}
@@ -144,27 +144,27 @@ export default function Footer() {
           <h2>Get in Touch</h2>
           <p className="site-footer-company-name">{cms.company_name}</p>
           
-          <a href={`mailto:${cms.email}`} title="Email Us">
+          <a href={`mailto:${cms.email || cms.supportEmail}`} title="Email Us">
             <Mail size={16} aria-hidden="true" />
-            <span>{cms.email}</span>
+            <span>{cms.email || cms.supportEmail}</span>
           </a>
 
-          <a href={`tel:${(cms.phone || '').replace(/[^0-9+]/g, '')}`} title="Call Us">
+          <a href={`tel:${(cms.phone || cms.primaryPhone || '').replace(/[^0-9+]/g, '')}`} title="Call Us">
             <Phone size={16} aria-hidden="true" />
-            <span>{cms.phone}</span>
+            <span>{cms.phone || cms.primaryPhone}</span>
           </a>
 
-          {cms.whatsapp && (
-            <a href={`https://wa.me/91${cms.whatsapp.replace(/[^0-9]/g, '')}`} target="_blank" rel="noopener noreferrer" title="Chat on WhatsApp">
+          {(cms.whatsapp || cms.whatsappNumber) && (
+            <a href={`https://wa.me/91${(cms.whatsapp || cms.whatsappNumber).replace(/[^0-9]/g, '')}`} target="_blank" rel="noopener noreferrer" title="Chat on WhatsApp">
               <MessageCircle size={16} aria-hidden="true" />
-              <span>WhatsApp · {cms.whatsapp}</span>
+              <span>WhatsApp · {cms.whatsapp || cms.whatsappNumber}</span>
               <ArrowUpRight size={13} aria-hidden="true" />
             </a>
           )}
 
-          <a href={cms.maps_link || "https://maps.app.goo.gl/XfTbnEiJX9VfJzMD9"} target="_blank" rel="noopener noreferrer" title="View Office on Google Maps">
+          <a href={cms.maps_link || cms.mapsLink || "https://maps.app.goo.gl/XfTbnEiJX9VfJzMD9"} target="_blank" rel="noopener noreferrer" title="View Office on Google Maps">
             <MapPin size={16} aria-hidden="true" />
-            <span>{cms.office_location || 'Alt. F Begumpet'}</span>
+            <span>{cms.office_location || cms.address || 'Alt. F Begumpet'}</span>
             <ArrowUpRight size={13} aria-hidden="true" />
           </a>
 
@@ -216,7 +216,7 @@ export default function Footer() {
           </div>
           <div className="legal-item">
             <span className="legal-label">Date of Incorporation:</span>
-            <span className="legal-value">{cms.incorporation_date || '2026'}</span>
+            <span className="legal-value">{cms.incorporation_date || cms.incorporationDate || '2026'}</span>
           </div>
         </div>
       </motion.div>

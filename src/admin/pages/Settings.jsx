@@ -23,7 +23,20 @@ const Settings = () => {
   }, []);
 
   const handleInputChange = (field, value) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+    setFormData(prev => {
+      const updated = { ...prev, [field]: value };
+      if (field === 'phone') updated.primaryPhone = value;
+      if (field === 'primaryPhone') updated.phone = value;
+      if (field === 'email') { updated.supportEmail = value; updated.companyEmail = value; }
+      if (field === 'supportEmail') { updated.email = value; updated.companyEmail = value; }
+      if (field === 'whatsapp') updated.whatsappNumber = value;
+      if (field === 'whatsappNumber') updated.whatsapp = value;
+      if (field === 'office_location') { updated.address = value; updated.officeLocation = value; }
+      if (field === 'address') { updated.office_location = value; updated.officeLocation = value; }
+      if (field === 'maps_link') updated.mapsLink = value;
+      if (field === 'mapsLink') updated.maps_link = value;
+      return updated;
+    });
   };
 
   const handleSave = async (e) => {
@@ -74,7 +87,7 @@ const Settings = () => {
           </p>
         </div>
         <button className="btn-primary" onClick={handleSave} disabled={saving} style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
-          <Save size={16} /> {saving ? 'Saving Changes...' : 'Save & Update Live Site'}
+          <Save size={16} /> {saving ? 'Synchronizing & Publishing...' : 'Save & Update Live Site'}
         </button>
       </div>
 
@@ -335,7 +348,7 @@ const Settings = () => {
 
           <div style={{ marginTop: '24px', paddingTop: '16px', borderTop: '1px solid var(--border-color)', display: 'flex', justifyContent: 'flex-end' }}>
             <button className="btn-primary" onClick={handleSave} disabled={saving} style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
-              <Save size={16} /> {saving ? 'Saving Changes...' : 'Save & Update Live Site'}
+              <Save size={16} /> {saving ? 'Synchronizing & Publishing...' : 'Save & Update Live Site'}
             </button>
           </div>
         </div>
